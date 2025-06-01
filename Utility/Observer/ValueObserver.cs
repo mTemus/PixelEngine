@@ -13,17 +13,22 @@ namespace PixelEngine.Utility.Observer
         [SerializeField] 
         private T m_value;
 
+        [SerializeField]
+        private T m_previousValue;
+
         [SerializeField] 
         private UnityEvent<T> m_onValueChanged;
 
         [SerializeField] 
         private UnityEvent<T> m_onValueSet;
-
+        
         public T Value
         {
             get => m_value;
             set => Set(value);
         }
+
+        public T PreviousValue => m_previousValue;
 
         public static implicit operator T(ValueObserver<T> observer) => observer.m_value;
 
@@ -46,6 +51,7 @@ namespace PixelEngine.Utility.Observer
             if (Equals(m_value, value)) 
                 return;
             
+            m_previousValue = m_value;
             m_value = value;
             Invoke();
         }
@@ -65,11 +71,9 @@ namespace PixelEngine.Utility.Observer
             if (m_onValueChanged == null) 
                 m_onValueChanged = new UnityEvent<T>();
 
-#if UNITY_EDITOR
             UnityEventTools.AddPersistentListener(m_onValueChanged, callback);
-#else
-        onValueChanged.AddListener(callback);
-#endif
+
+            m_onValueChanged.AddListener(callback);
         }
 
         public void RemoveChangedListener(UnityAction<T> callback)
@@ -80,11 +84,9 @@ namespace PixelEngine.Utility.Observer
             if (m_onValueChanged == null) 
                 return;
 
-#if UNITY_EDITOR
             UnityEventTools.RemovePersistentListener(m_onValueChanged, callback);
-#else
-        onValueChanged.RemoveListener(callback);
-#endif
+
+            m_onValueChanged.RemoveListener(callback);
         }
 
         #endregion
@@ -93,60 +95,33 @@ namespace PixelEngine.Utility.Observer
 
         public void AddSetListener(UnityAction<T> callback)
         {
-            if (callback == null) return;
-            if (m_onValueSet == null) m_onValueSet = new UnityEvent<T>();
-
-#if UNITY_EDITOR
+            m_onValueSet ??= new UnityEvent<T>();
+            
             UnityEventTools.AddPersistentListener(m_onValueSet, callback);
-#else
-        m_onValueSet.AddListener(callback);
-#endif
+
+            m_onValueSet.AddListener(callback);
         }
 
         public void RemoveSetListener(UnityAction<T> callback)
         {
-            if (callback == null) return;
-            if (m_onValueSet == null) return;
-
-#if UNITY_EDITOR
-            UnityEventTools.RemovePersistentListener(m_onValueSet, callback);
-#else
-        m_onValueSet.RemoveListener(callback);
-#endif
+            m_onValueSet?.RemoveListener(callback);
         }
 
         #endregion
         
         public void RemoveAllListeners()
         {
-            if (m_onValueChanged == null) 
-                return;
-
-#if UNITY_EDITOR
-            var fieldInfo = typeof(UnityEventBase).GetField("m_PersistentCalls", BindingFlags.Instance | BindingFlags.NonPublic);
-            var value = fieldInfo.GetValue(m_onValueChanged);
-            value.GetType().GetMethod("Clear").Invoke(value, null);
-#else
-        onValueChanged.RemoveAllListeners();
-#endif
-            if (m_onValueSet == null)
-                return;
-            
-#if UNITY_EDITOR
-            fieldInfo = typeof(UnityEventBase).GetField("m_PersistentCalls", BindingFlags.Instance | BindingFlags.NonPublic);
-            value = fieldInfo.GetValue(m_onValueSet);
-            value.GetType().GetMethod("Clear").Invoke(value, null);
-#else
-        onValueSet.RemoveAllListeners();
-#endif      
-            
+            m_onValueChanged?.RemoveAllListeners();
+            m_onValueSet?.RemoveAllListeners();
         }
 
         public void Dispose()
         {
             RemoveAllListeners();
             m_onValueChanged = null;
+            m_onValueSet = null;
             m_value = default;
+            m_previousValue = default;
         }
     }
 }

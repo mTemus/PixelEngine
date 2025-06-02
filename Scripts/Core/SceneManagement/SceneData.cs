@@ -24,12 +24,12 @@ namespace PixelEngine.Core.SceneManagement
     public class SceneGroup
     {
         [SerializeField] 
-        private string m_groupName;
+        private ScriptableEnumSceneName m_groupName;
         
         [SerializeField] 
         private List<SceneData> m_scenes;
     
-        public string GroupName => m_groupName;
+        public ScriptableEnumSceneName GroupName => m_groupName;
         public List<SceneData> Scenes => m_scenes;
 
         public string FindSceneNameByType(ESceneType sceneType) => m_scenes.Find(x => x.SceneType == sceneType).Name;

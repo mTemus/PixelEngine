@@ -8,7 +8,7 @@ namespace PixelEngine.Core.SceneManagement
     //TODO: addressables
     //TODO: UniTask/R3
     //TODO: modular loading screen
-    //TODO: scene group with a tag/enum name
+
     //TODO: loading single scenes (?)
     //TODO: scene groups:
     //  - which is initializable checkbox
@@ -34,7 +34,7 @@ namespace PixelEngine.Core.SceneManagement
         {
             Manager.OnSceneLoaded += sceneName => Debug.Log($"Scene loaded: {sceneName}");
             Manager.OnSceneUnloaded += sceneName => Debug.Log($"Scene unloaded: {sceneName}");
-            Manager.OnSceneGroupLoaded += () => Debug.Log($"Scene group loaded.");
+            Manager.OnSceneGroupLoaded += group => Debug.Log($"Scene group loaded: {group.GroupName.name}");
         }
         
         private async void Start()

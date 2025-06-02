@@ -11,7 +11,7 @@ namespace PixelEngine.Core.SceneManagement
     {
         public event Action<string> OnSceneLoaded = delegate {  };
         public event Action<string> OnSceneUnloaded = delegate {  };
-        public event Action OnSceneGroupLoaded = delegate {  };
+        public event Action<SceneGroup> OnSceneGroupLoaded = delegate {  };
         
         private SceneGroup m_activeSceneGroup;
         
@@ -49,9 +49,13 @@ namespace PixelEngine.Core.SceneManagement
                 progress?.Report(operationGroup.Progress);
                 await Task.Delay(100); 
             }
-
+            
             var activeScene = SceneManager.GetSceneByName(m_activeSceneGroup.FindSceneNameByType(ESceneType.Gameplay));
             SceneManager.SetActiveScene(activeScene);
+            
+            OnSceneGroupLoaded.Invoke(m_activeSceneGroup);
+            
+            //TODO: while on active scene "scene manager" "IsReady" property, when the initialization/data load is done.
         }
 
         public async Task UnloadScenes()

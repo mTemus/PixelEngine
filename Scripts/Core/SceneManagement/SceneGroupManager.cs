@@ -61,7 +61,7 @@ namespace PixelEngine.Core.SceneManagement
             
             int sceneCount = SceneManager.sceneCount;
 
-            for (int i = sceneCount; i > 0 ; i--)
+            for (int i = sceneCount - 1; i > 0 ; i--)
             {
                 var sceneAt = SceneManager.GetSceneAt(i);
 

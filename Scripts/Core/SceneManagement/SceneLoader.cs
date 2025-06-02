@@ -20,8 +20,6 @@ namespace PixelEngine.Core.SceneManagement
 
         private void Awake()
         {
-            enabled = false;
-            
             Manager.OnSceneLoaded += sceneName => Debug.Log($"Scene loaded: {sceneName}");
             Manager.OnSceneUnloaded += sceneName => Debug.Log($"Scene unloaded: {sceneName}");
             Manager.OnSceneGroupLoaded += () => Debug.Log($"Scene group loaded.");

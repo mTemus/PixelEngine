@@ -5,14 +5,22 @@ using UnityEngine.SceneManagement;
 
 namespace PixelEngine.Core
 {
-    public class Bootstrapper : MonoSingleton<Bootstrapper>
+    public class Bootstrapper
     {
+        public const string CoreSceneName = "Core";
+        
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static async void Init()
         {
-            Debug.Log("Bootstrapping game...");
+#if UNITY_EDITOR
+            var coreScene = SceneManager.GetSceneByName(CoreSceneName);
+
+            if (coreScene.IsValid() && coreScene.isLoaded)
+                return;
             
-            await SceneManager.LoadSceneAsync("Core", LoadSceneMode.Single).AsTask();
+            Debug.Log("Bootstrapping game...");
+            await SceneManager.LoadSceneAsync(CoreSceneName, LoadSceneMode.Single).AsTask();
+#endif
         }
     }
 }

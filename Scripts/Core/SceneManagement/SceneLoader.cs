@@ -5,10 +5,22 @@ using UnityEngine.UI;
 
 namespace PixelEngine.Core.SceneManagement
 {
+    //TODO: addressables
+    //TODO: UniTask/R3
+    //TODO: modular loading screen
+    //TODO: scene group with a tag/enum name
+    //TODO: loading single scenes (?)
+    //TODO: scene groups:
+    //  - which is initializable checkbox
+    //  - which is savable checkbox
+    //  - internal groups for gameplay levels?
+    //TODO: events:
+    //  - scene group loaded -> for initialization
+    
     public class SceneLoader : MonoBehaviour
     {
         [SerializeField] private Image m_loadingBar;
-        [SerializeField] private float fillSpeed = 0.5f;
+        [SerializeField] private float m_fillSpeed = 0.5f;
         [SerializeField] private Canvas m_loadingCanvas;
         [SerializeField] private Camera m_loadingCamera;
         [SerializeField] private SceneGroup[] m_sceneGroups;
@@ -38,7 +50,7 @@ namespace PixelEngine.Core.SceneManagement
             
             var currentFillAmount = m_loadingBar.fillAmount;
             var progressDifference = Mathf.Abs(currentFillAmount - m_targetProgress);
-            var dynamicFillSpeed = progressDifference * fillSpeed;
+            var dynamicFillSpeed = progressDifference * m_fillSpeed;
             
             m_loadingBar.fillAmount = Mathf.Lerp(currentFillAmount, m_targetProgress, Time.deltaTime * dynamicFillSpeed);
         }

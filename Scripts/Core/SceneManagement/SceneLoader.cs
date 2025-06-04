@@ -8,14 +8,14 @@ namespace PixelEngine.Core.SceneManagement
     //TODO: addressables
     //TODO: UniTask/R3
     //TODO: modular loading screen
+    //TODO: scene loading threshold in managers
 
     //TODO: loading single scenes (?)
     //TODO: scene groups:
-    //  - which is initializable checkbox
-    //  - which is savable checkbox
     //  - internal groups for gameplay levels?
     //TODO: events:
     //  - scene group loaded -> for initialization
+    //  - scene loaded -> for initialization
     
     public class SceneLoader : MonoBehaviour
     {

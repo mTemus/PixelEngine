@@ -11,9 +11,15 @@ namespace PixelEngine.Core.SceneManagement
         public event Action<string> OnSceneLoaded = delegate {  };
         public event Action<string> OnSceneUnloaded = delegate {  };
         public event Action<SceneGroup> OnSceneGroupLoaded = delegate {  };
-        
+
+        private readonly int m_sceneMillisecondsDelay = 100;
         private SceneGroup m_activeSceneGroup;
-        
+
+        public SceneGroupManager(int sceneMillisecondsDelay)
+        {
+            m_sceneMillisecondsDelay = sceneMillisecondsDelay;
+        }
+
         public async Task LoadScenes(SceneGroup group, IProgress<float> progress, bool reloadDuplicates = false)
         {
             m_activeSceneGroup = group;
@@ -46,7 +52,7 @@ namespace PixelEngine.Core.SceneManagement
             while (!operationGroup.IsDone)
             {
                 progress?.Report(operationGroup.Progress);
-                await Task.Delay(100); 
+                await Task.Delay(m_sceneMillisecondsDelay); 
             }
             
             var activeScene = SceneManager.GetSceneByName(m_activeSceneGroup.FindSceneNameByType(ESceneType.Gameplay));
@@ -93,7 +99,7 @@ namespace PixelEngine.Core.SceneManagement
             }
 
             while (!operationGroup.IsDone)
-                await Task.Delay(100); 
+                await Task.Delay(m_sceneMillisecondsDelay); 
             
             // unload assets?
             // events?

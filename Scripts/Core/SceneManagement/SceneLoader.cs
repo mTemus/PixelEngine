@@ -8,7 +8,6 @@ namespace PixelEngine.Core.SceneManagement
     //TODO: addressables
     //TODO: UniTask/R3
     //TODO: modular loading screen
-    //TODO: scene loading threshold in managers
 
     //TODO: loading single scenes (?)
     //TODO: scene groups:
@@ -16,9 +15,14 @@ namespace PixelEngine.Core.SceneManagement
     //TODO: events:
     //  - scene group loaded -> for initialization
     //  - scene loaded -> for initialization
+    // TODO: change unloading scenes?
     
     public class SceneLoader : MonoBehaviour
     {
+        [SerializeField] 
+        [Range(100, 5000)]
+        private int m_sceneOperationMillisecondsDelay = 100;
+        
         [SerializeField] private Image m_loadingBar;
         [SerializeField] private float m_fillSpeed = 0.5f;
         [SerializeField] private Canvas m_loadingCanvas;
@@ -28,13 +32,17 @@ namespace PixelEngine.Core.SceneManagement
         private float m_targetProgress;
         private bool m_isLoading;
 
-        public readonly SceneGroupManager Manager = new SceneGroupManager();
+        public SceneGroupManager SceneGroupManager;
+        public SingleSceneManager SingleScenesManager;
 
         private void Awake()
         {
-            Manager.OnSceneLoaded += sceneName => Debug.Log($"Scene loaded: {sceneName}");
-            Manager.OnSceneUnloaded += sceneName => Debug.Log($"Scene unloaded: {sceneName}");
-            Manager.OnSceneGroupLoaded += group => Debug.Log($"Scene group loaded: {group.GroupName.name}");
+            SceneGroupManager = new SceneGroupManager(m_sceneOperationMillisecondsDelay);
+            SingleScenesManager = new SingleSceneManager(m_sceneOperationMillisecondsDelay);
+            
+            SceneGroupManager.OnSceneLoaded += sceneName => Debug.Log($"Scene loaded: {sceneName}");
+            SceneGroupManager.OnSceneUnloaded += sceneName => Debug.Log($"Scene unloaded: {sceneName}");
+            SceneGroupManager.OnSceneGroupLoaded += group => Debug.Log($"Scene group loaded: {group.GroupName.name}");
         }
         
         private async void Start()
@@ -64,7 +72,7 @@ namespace PixelEngine.Core.SceneManagement
             progress.OnProgress += target => m_targetProgress = Mathf.Max(target, m_targetProgress);
             
             EnableLoadingCanvas();
-            await Manager.LoadScenes(m_sceneGroups[index], progress);
+            await SceneGroupManager.LoadScenes(m_sceneGroups[index], progress);
             EnableLoadingCanvas(false);
         }
 

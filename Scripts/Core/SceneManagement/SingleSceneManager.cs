@@ -16,6 +16,13 @@ namespace PixelEngine.Core.SceneManagement
            
         private readonly List<SceneData> m_activeScenes = new List<SceneData>();
 
+        private readonly int m_sceneMillisecondsDelay = 100;
+
+        public SingleSceneManager(int sceneMillisecondsDelay)
+        {
+            m_sceneMillisecondsDelay = sceneMillisecondsDelay;
+        }
+
         public async void LoadScene(SceneData sceneData)
         {
             if (m_activeScenes.Contains(sceneData))
@@ -56,7 +63,7 @@ namespace PixelEngine.Core.SceneManagement
             }
             
             while (!operationGroup.IsDone)
-                await Task.Delay(100); 
+                await Task.Delay(m_sceneMillisecondsDelay); 
             
             for (var i = 0; i < scenesToLoad; i++)
             {
@@ -89,7 +96,7 @@ namespace PixelEngine.Core.SceneManagement
             }
             
             while (!operationGroup.IsDone)
-                await Task.Delay(100); 
+                await Task.Delay(m_sceneMillisecondsDelay); 
             
             for (var i = 0; i < scenesToUnload; i++)
             {

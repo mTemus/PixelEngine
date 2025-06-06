@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using PixelEngine.Utility.Threading;
 using UnityEngine.SceneManagement;
@@ -8,9 +9,8 @@ namespace PixelEngine.Core.SceneManagement
 {
     public class SceneGroupManager
     {
-        public event Action<string> OnSceneLoaded = delegate {  };
-        public event Action<string> OnSceneUnloaded = delegate {  };
         public event Action<SceneGroup> OnSceneGroupLoaded = delegate {  };
+        public event Action<SceneGroup> OnBeforeSceneGroupUnloaded = delegate {  };
 
         private readonly int m_sceneMillisecondsDelay = 100;
         private SceneGroup m_activeSceneGroup;
@@ -26,7 +26,7 @@ namespace PixelEngine.Core.SceneManagement
 
             var loadedScenes = new List<string>();
 
-            await UnloadScenes();
+            await UnloadSceneGroup();
             
             var sceneCount = SceneManager.loadedSceneCount;
 
@@ -46,7 +46,6 @@ namespace PixelEngine.Core.SceneManagement
                 var operation = SceneManager.LoadSceneAsync(sceneData.Scene.Path, LoadSceneMode.Additive);
                 
                 operationGroup.Operations.Add(operation);
-                OnSceneLoaded.Invoke(sceneData.Name);
             }
 
             while (!operationGroup.IsDone)
@@ -63,46 +62,33 @@ namespace PixelEngine.Core.SceneManagement
             //TODO: while on active scene "scene manager" "IsReady" property, when the initialization/data load is done.
         }
 
-        public async Task UnloadScenes()
+        public async Task UnloadSceneGroup()
         {
-            var scenes = new List<string>();
-            var activeScene = SceneManager.GetActiveScene().name;
+            if (m_activeSceneGroup == null)
+                return;
+
+            OnBeforeSceneGroupUnloaded.Invoke(m_activeSceneGroup);
+            var operationGroup = new AsyncOperationGroup(m_activeSceneGroup.Scenes.Count);
             
-            int sceneCount = SceneManager.sceneCount;
-
-            for (int i = sceneCount - 1; i > 0 ; i--)
+            for (int i = m_activeSceneGroup.Scenes.Count - 1; i >= 0; i--)
             {
-                var sceneAt = SceneManager.GetSceneAt(i);
-
-                if (!sceneAt.isLoaded)
-                    continue;
-
-                var sceneName = sceneAt.name;
+                var scene = SceneManager.GetSceneByName(m_activeSceneGroup.Scenes[i].Name);
                 
-                if (sceneName.Equals(activeScene) || sceneName == "Core") 
+                if (!scene.isLoaded)
                     continue;
-
-                scenes.Add(sceneName);
-            }
-            
-            var operationGroup = new AsyncOperationGroup(scenes.Count);
-            
-            foreach (var sceneName in scenes)
-            {
-                var operation = SceneManager.UnloadSceneAsync(sceneName);
+                
+                var operation = SceneManager.UnloadSceneAsync(scene);
 
                 if (operation == null)
-                    return;
+                    continue;
                 
                 operationGroup.Operations.Add(operation);
-                OnSceneUnloaded.Invoke(sceneName);
             }
-
+            
             while (!operationGroup.IsDone)
                 await Task.Delay(m_sceneMillisecondsDelay); 
-            
-            // unload assets?
-            // events?
+
+            m_activeSceneGroup = null;
         }
     }
 }

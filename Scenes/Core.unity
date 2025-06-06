@@ -535,17 +535,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bd7da7aa7b4e14903323b48aeff636, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_sceneOperationMillisecondsDelay: 100
+  m_sceneLoadedEvent: {fileID: 11400000, guid: a297ebb8d2682d74ebc587fdda774622, type: 2}
+  m_sceneUnloadedEvent: {fileID: 11400000, guid: 5c725611f1e96bd4fb5c84a929f97efe,
+    type: 2}
+  m_scenePreUnloadedEvent: {fileID: 11400000, guid: 6bbd2b74d06337f4aa0d29105a5a4b41,
+    type: 2}
+  m_sceneGroupLoadedEvent: {fileID: 11400000, guid: 524f98fa914b33842805ba26f9d16f10,
+    type: 2}
+  m_sceneGroupPreUnloadedEvent: {fileID: 11400000, guid: 7b37de9029bf42e4990c2e3770158918,
+    type: 2}
   m_loadingBar: {fileID: 1963336873}
-  fillSpeed: 0.5
+  m_fillSpeed: 0.5
   m_loadingCanvas: {fileID: 160992889}
   m_loadingCamera: {fileID: 131075299}
   m_sceneGroups:
-  - m_groupName: Test
+  - m_groupName: {fileID: 0}
     m_scenes:
     - m_sceneType: 3
       m_scene:
         asset: {fileID: 102900000, guid: a959ac84da600654bb6ccc7c9be92b21, type: 3}
         guid: a959ac84da600654bb6ccc7c9be92b21
+      m_isInitializable: 0
+      m_isSavable: 0
 --- !u!4 &1127691173
 Transform:
   m_ObjectHideFlags: 0

@@ -9,7 +9,6 @@ namespace PixelEngine.Core.SceneManagement
 {
     public class SingleSceneManager
     {
-        public event Action<SceneData> OnScenePreLoaded = delegate {  };
         public event Action<SceneData> OnSceneLoaded = delegate {  };
         public event Action<SceneData> OnScenePreUnloaded = delegate {  };
         public event Action<SceneData> OnSceneUnloaded = delegate {  };
@@ -31,7 +30,6 @@ namespace PixelEngine.Core.SceneManagement
                 return;
             }
             
-            OnScenePreLoaded.Invoke(sceneData);
             var operation = SceneManager.LoadSceneAsync(sceneData.Scene.Path, LoadSceneMode.Additive);
             
             while (!operation.isDone)
@@ -59,7 +57,6 @@ namespace PixelEngine.Core.SceneManagement
                 var operation = SceneManager.LoadSceneAsync(sceneData.Scene.Path, LoadSceneMode.Additive);
                 
                 operationGroup.Operations.Add(operation);
-                OnScenePreLoaded.Invoke(sceneData);
             }
             
             while (!operationGroup.IsDone)

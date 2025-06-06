@@ -1,4 +1,6 @@
 ﻿using System.Threading.Tasks;
+using EditorAttributes;
+using PixelEngine.Core.SceneManagement.Events;
 using PixelEngine.Utility.Math;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,21 +10,34 @@ namespace PixelEngine.Core.SceneManagement
     //TODO: addressables
     //TODO: UniTask/R3
     //TODO: modular loading screen
-
-    //TODO: loading single scenes (?)
     //TODO: scene groups:
     //  - internal groups for gameplay levels?
-    //TODO: events:
-    //  - scene group loaded -> for initialization
-    //  - scene loaded -> for initialization
-    // TODO: change unloading scenes?
     
     public class SceneLoader : MonoBehaviour
     {
+        [Title(title: "Settings", titleSize: 22, titleSpace: 14, alignment: TextAnchor.MiddleCenter, drawLine: true)]
+        
         [SerializeField] 
         [Range(100, 5000)]
         private int m_sceneOperationMillisecondsDelay = 100;
         
+        [Title(title: "Events", titleSize: 22, titleSpace: 14, alignment: TextAnchor.MiddleCenter, drawLine: true)]
+        [SerializeField, Required(true)]
+        private ScriptableEventSceneData m_sceneLoadedEvent;
+        
+        [SerializeField, Required(true)]
+        private ScriptableEventSceneData m_sceneUnloadedEvent;
+        
+        [SerializeField, Required(true)]
+        private ScriptableEventSceneData m_scenePreUnloadedEvent;
+        
+        [SerializeField, Required(true)]
+        private ScriptableEventSceneGroup m_sceneGroupLoadedEvent;
+        
+        [SerializeField, Required(true)]
+        private ScriptableEventSceneGroup m_sceneGroupPreUnloadedEvent;
+        
+        [Title(title: "Other", titleSize: 22, titleSpace: 14, alignment: TextAnchor.MiddleCenter, drawLine: true)]
         [SerializeField] private Image m_loadingBar;
         [SerializeField] private float m_fillSpeed = 0.5f;
         [SerializeField] private Canvas m_loadingCanvas;
@@ -39,10 +54,18 @@ namespace PixelEngine.Core.SceneManagement
         {
             SceneGroupManager = new SceneGroupManager(m_sceneOperationMillisecondsDelay);
             SingleScenesManager = new SingleSceneManager(m_sceneOperationMillisecondsDelay);
+        
+            //TODO: bind scriptable events to normal events in managers
             
-            SceneGroupManager.OnSceneLoaded += sceneName => Debug.Log($"Scene loaded: {sceneName}");
-            SceneGroupManager.OnSceneUnloaded += sceneName => Debug.Log($"Scene unloaded: {sceneName}");
+#if UNITY_EDITOR
             SceneGroupManager.OnSceneGroupLoaded += group => Debug.Log($"Scene group loaded: {group.GroupName.name}");
+            SceneGroupManager.OnBeforeSceneGroupUnloaded += group => Debug.Log($"Scene group unloaded: {group.GroupName.name}");
+
+            SingleScenesManager.OnSceneLoaded += scene => Debug.Log($"Scene loaded: {scene.Name}");
+            SingleScenesManager.OnScenePreUnloaded += scene => Debug.Log($"Scene preunloaded: {scene.Name}");
+            SingleScenesManager.OnSceneUnloaded += scene => Debug.Log($"Scene unloaded: {scene.Name}");
+#endif
+
         }
         
         private async void Start()

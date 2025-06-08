@@ -5,6 +5,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityUtils;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 // https://www.youtube.com/watch?v=D4r5EyYQvwY
 namespace PixelEngine.Systems.ServiceLocator
 {
@@ -14,12 +18,66 @@ namespace PixelEngine.Systems.ServiceLocator
     {
         private static ServiceLocator m_global;
         private static Dictionary<Scene, ServiceLocator> m_sceneContainers;
-
+        private static List<GameObject> m_tmpSceneGameObjects;
+        
         readonly ServiceManager m_services = new ServiceManager();
 
         const string k_globalServiceLocatorName = "ServiceLocator [Global]";
         const string k_sceneServiceLocatorName = "ServiceLocator [Scene]";
 
+        #region Bootstrapping
+
+        protected internal void ConfigureAsGlobal(bool dontDestroyOnLoad)
+        {
+            if (m_global == this)
+            {
+                Debug.LogWarning("ServiceLocator --- This global ServiceLocator is already registered!", this);
+            }
+            else if (m_global != null)
+            {
+                Debug.LogError("ServiceLocator --- Another ServiceLocator is already registered as global!", this);
+            }
+            else
+            {
+                m_global = this;
+                
+                if (dontDestroyOnLoad)
+                    DontDestroyOnLoad(gameObject);
+            }
+        }
+        
+        protected internal void ConfigureAsScene()
+        {
+            var scene = gameObject.scene;
+            
+            if (m_sceneContainers.ContainsKey(scene))
+            {
+                Debug.LogError("ServiceLocator --- This scene ServiceLocator is already registered!", this);
+                return;
+            }
+            
+            m_sceneContainers[scene] = this;
+        }
+
+        //TODO: this to uninitialization
+        private void OnDestroy()
+        {
+            if (m_global == this)
+                m_global = null;
+            else if (m_sceneContainers.ContainsValue(this))
+                m_sceneContainers.Remove(gameObject.scene);
+        }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            m_global = null;
+            m_sceneContainers = new Dictionary<Scene, ServiceLocator>();
+            m_tmpSceneGameObjects = new List<GameObject>();
+        }
+        
+        #endregion
+        
         #region Locators
 
         public static ServiceLocator Global
@@ -48,7 +106,7 @@ namespace PixelEngine.Systems.ServiceLocator
             return mb.GetComponentInParent<ServiceLocator>().OrNull() ?? ForSceneOf(mb) ?? Global;
         }
 
-        private static List<GameObject> m_tmpSceneGameObjects;
+        
 
         public static ServiceLocator ForSceneOf(MonoBehaviour mb)
         {
@@ -95,6 +153,20 @@ namespace PixelEngine.Systems.ServiceLocator
 
         #region Get
 
+        public ServiceLocator Get<T>(out T service) where T : class
+        {
+            if (TryGetService(out service)) 
+                return this;
+
+            if (TryGetNextInHierarchy(out var container))
+            {
+                container.Get(out service);
+                return container;
+            }
+            
+            throw new ArgumentException($"ServiceLocator --- Service of type {typeof(T).FullName} was not registered!");
+        }
+
         private bool TryGetService<T>(out T service) where T : class
         {
             return m_services.TryGet(out service);
@@ -111,6 +183,20 @@ namespace PixelEngine.Systems.ServiceLocator
             container = transform.parent.OrNull()?.GetComponentInParent<ServiceLocator>().OrNull() ?? ForSceneOf(this);
             return container != null;
         }
+
+        #endregion
+
+        #region Editor Context
+
+#if UNITY_EDITOR
+        
+        [MenuItem("PixelEngine/Systems/Service Locator/Add Global")]
+        private static void AddGlobal() => new GameObject(k_globalServiceLocatorName, typeof(ServiceLocatorGlobalBootstrapper)); 
+        
+        [MenuItem("PixelEngine/Systems/Service Locator/Add Scene")]
+        private static void AddScene() => new GameObject(k_sceneServiceLocatorName, typeof(ServiceLocatorSceneBootstrapper));
+
+#endif
 
         #endregion
     }

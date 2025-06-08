@@ -27,24 +27,4 @@ namespace PixelEngine.Systems.ServiceLocator
 
         protected abstract void Bootstrap();
     }
-    
-    [AddComponentMenu("PixelEngine/Systems/ServiceLocator/Global")]
-    public class ServiceLocatorGlobalBootstrapper : Bootstrapper
-    {
-        [SerializeField] private bool m_dontDestroyOnLoad = true;
-        
-        protected override void Bootstrap()
-        {
-            
-        }
-    }
-    
-    [AddComponentMenu("PixelEngine/Systems/ServiceLocator/Scene")]
-    public class ServiceLocatorSceneBootstrapper : Bootstrapper
-    {
-        protected override void Bootstrap()
-        {
-            
-        }
-    }
 }

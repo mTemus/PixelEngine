@@ -1,11 +1,10 @@
 using PixelEngine.Extensions;
-using PixelEngine.Utility.Singleton;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace PixelEngine.Core
 {
-    public class Bootstrapper
+    public class EngineCoreBootstrapper
     {
         public const string CoreSceneName = "Core";
         
@@ -14,7 +13,7 @@ namespace PixelEngine.Core
         {
 #if UNITY_EDITOR
             var coreScene = SceneManager.GetSceneByName(CoreSceneName);
-
+            
             if (coreScene.IsValid() && coreScene.isLoaded)
                 return;
             

@@ -15,11 +15,33 @@ namespace PixelEngine.Core.Initialization
         private InterfaceReference<IInitializable> m_initializable;
 
         public int Priority => m_priority;
-        public IInitializable Component => m_initializable.Value;
+        public IInitializable Component 
+        {
+            get
+            {
+                if (m_initializable == null || m_initializable.Value == null)
+                    return null;
+                
+                return m_initializable.Value;
+            }    
+        }
 
         public InitializableComponent(IInitializable initializable)
         {
             m_initializable = new InterfaceReference<IInitializable> { Value = initializable };
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is not InitializableComponent other)
+                return false;
+            
+            return Component == other.Component;
+        }
+
+        public override int GetHashCode()
+        {
+            return Component.GetHashCode();
         }
     }
 }

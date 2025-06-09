@@ -13,7 +13,7 @@ namespace PixelEngine.Core.Initialization
         [SerializeField]
         private List<InitializableComponent> m_initializables = new List<InitializableComponent>();
 
-        public EInitializationGroup InitializationGroup => m_initializationGroup;
+        public EInitializationGroup Group => m_initializationGroup;
         public List<InitializableComponent> Initializables => m_initializables;
 
         #region Editor

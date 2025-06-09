@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace PixelEngine.Core.Initialization
@@ -25,7 +26,8 @@ namespace PixelEngine.Core.Initialization
                 
                 m_initializables.Add(initializables[i]);
             }
-            
+
+            m_initializables = m_initializables.Distinct().ToList();
             SortByPriority();
         }
         
@@ -48,7 +50,7 @@ namespace PixelEngine.Core.Initialization
         public void RemoveNulls()
         {
             for (var i = m_initializables.Count - 1; i >= 0; i--) 
-                if (m_initializables[i] == null)
+                if (m_initializables[i] == null || m_initializables[i].Component == null)
                     m_initializables.RemoveAt(i);
         }
 

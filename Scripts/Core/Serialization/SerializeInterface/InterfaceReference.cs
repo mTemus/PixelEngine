@@ -12,12 +12,18 @@ namespace PixelEngine.Core.Serialization.SerializeInterface
 
         public TInterface Value
         {
-            get => m_underlyingValue switch
+            get
             {
-                null => null,
-                TInterface @interface => @interface,
-                _ => throw new InvalidOperationException($"{m_underlyingValue} needs to implement interface {nameof(TInterface)}.")
-            };
+                if (m_underlyingValue == null)
+                    return null;
+                
+                if (m_underlyingValue is TInterface @interface)
+                    return @interface;
+                
+                // There are sometimes edge cases where the value is null but still tries to pass through so null need to be returned
+                Debug.LogError($"{m_underlyingValue}/{m_underlyingValue?.GetType()} does not implement {typeof(TInterface)}");
+                return null;
+            }
             set => m_underlyingValue = value switch
             {
                 null => null,

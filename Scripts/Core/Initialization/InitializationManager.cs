@@ -1,11 +1,13 @@
 using System;
 using System.Linq;
-
 using AYellowpaper.SerializedCollections;
+using EditorAttributes;
 using PixelEngine.Extensions;
 using UnityEngine;
+using UnityUtils;
 
 #if UNITY_EDITOR
+using UnityEditor;
 using System.Threading.Tasks;
 #endif
 
@@ -23,8 +25,9 @@ namespace PixelEngine.Core.Initialization
         {
             PopulateKeys();
             SortByPriority();
+            RemoveNulls();
             GatherSceneInitializables();
-            HandleGroups();
+            SortInitializables();
         }
 
         private void PopulateKeys()
@@ -66,28 +69,34 @@ namespace PixelEngine.Core.Initialization
             }
         }
 
-        private void HandleGroups()
-        {
-            foreach (var initializationGroup in m_groups.Values)
-            {
-                initializationGroup.RemoveNulls();
-                initializationGroup.SortByPriority();
-            }
-        }
+        private void RemoveNulls() => m_groups.ForEach(x => x.Value.RemoveNulls());
+        private void SortInitializables() => m_groups.ForEach(x => x.Value.SortByPriority());
 
+        [Button("Gather Initializables")]
         private void GatherSceneInitializables()
         {
-            if (!gameObject.scene.TryGetComponents<InitializableObject>(out var initializables, true))
+            if (!gameObject.scene.TryGetComponents<InitializableObject>(out var initializableObjects, true))
             {
                 Debug.LogWarning($"InitialzationManager ({gameObject.scene.name}) --- No InitializableObjects found in scene!");
                 return;
             }
 
-            foreach (var initializable in initializables)
-                m_groups[initializable.InitializationGroup].AddInitializables(initializable.Initializables);
+            foreach (var initializableObject in initializableObjects)
+            {
+                if (initializableObject.Group == EInitializationGroup.Default)
+                    Debug.LogError($"SceneInitializationManager ({gameObject.scene.name}) --- Initializable ({initializableObject.gameObject.name} has Default group!");
+                
+                m_groups[initializableObject.Group].AddInitializables(initializableObject.Initializables);
+            }
+            
+#if UNITY_EDITOR
+            EditorUtility.SetDirty(this); // Mark the object as dirty so Unity serializes the change
+#endif
         }
         
         #endregion
+
+        #region Initialization
 
         public void RunInitialization(bool initializeAsNew)
         {
@@ -107,7 +116,7 @@ namespace PixelEngine.Core.Initialization
             foreach (var group in m_groups.Values)
                 group.EarlyInitialize();
         }
-        
+
         private void InitializeAsNew()
         {
             foreach (var group in m_groups.Values)
@@ -131,6 +140,7 @@ namespace PixelEngine.Core.Initialization
             foreach (var group in m_groups.Values)
                 group.Uninitialize();
         }
-        
+
+        #endregion
     }
 }

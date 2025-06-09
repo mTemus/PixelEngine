@@ -2,12 +2,14 @@ using System;
 using System.Linq;
 
 using AYellowpaper.SerializedCollections;
+using PixelEngine.Extensions;
 using UnityEngine;
 
 #if UNITY_EDITOR
 using System.Threading.Tasks;
 #endif
 
+//TODO: runtime initializables
 namespace PixelEngine.Core.Initialization
 {
     public class InitializationManager : MonoBehaviour
@@ -21,6 +23,7 @@ namespace PixelEngine.Core.Initialization
         {
             PopulateKeys();
             SortByPriority();
+            GatherSceneInitializables();
             HandleGroups();
         }
 
@@ -72,18 +75,62 @@ namespace PixelEngine.Core.Initialization
             }
         }
 
+        private void GatherSceneInitializables()
+        {
+            if (!gameObject.scene.TryGetComponents<InitializableObject>(out var initializables, true))
+            {
+                Debug.LogWarning($"InitialzationManager ({gameObject.scene.name}) --- No InitializableObjects found in scene!");
+                return;
+            }
+
+            foreach (var initializable in initializables)
+                m_groups[initializable.InitializationGroup].AddInitializables(initializable.Initializables);
+        }
+        
         #endregion
 
-        [Serializable]
-        public enum EInitializationGroup
+        public void RunInitialization(bool initializeAsNew)
         {
-            Core = 1,
-            Systems = 2,
-            UI = 3,
-            Player = 4,
-            Entities = 5,
-            AI = 6,
-            Environment = 7,
+            InitializeAsEarly();
+            if (initializeAsNew) InitializeAsNew();
+            else InitializeAsLoaded();
+            LateInitialize();
         }
+
+        public void RunUninitialization()
+        {
+            Uninitialize();
+        }
+
+        private void InitializeAsEarly()
+        {
+            foreach (var group in m_groups.Values)
+                group.EarlyInitialize();
+        }
+        
+        private void InitializeAsNew()
+        {
+            foreach (var group in m_groups.Values)
+                group.InitializeAsNew();
+        }
+
+        private void InitializeAsLoaded()
+        {
+            foreach (var group in m_groups.Values)
+                group.InitializeAsLoaded();
+        }
+
+        private void LateInitialize()
+        {
+            foreach (var group in m_groups.Values)
+                group.LateInitialize();
+        }
+
+        private void Uninitialize()
+        {
+            foreach (var group in m_groups.Values)
+                group.Uninitialize();
+        }
+        
     }
 }

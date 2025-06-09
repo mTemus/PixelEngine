@@ -15,10 +15,10 @@ namespace PixelEngine.Core.Initialization
         private InterfaceReference<IInitializable> m_initializable;
 
         public int Priority => m_priority;
-        
-        public InitializableComponent(int priority, IInitializable initializable)
+        public IInitializable Component => m_initializable.Value;
+
+        public InitializableComponent(IInitializable initializable)
         {
-            m_priority = priority;
             m_initializable = new InterfaceReference<IInitializable> { Value = initializable };
         }
     }

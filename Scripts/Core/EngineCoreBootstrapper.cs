@@ -1,4 +1,4 @@
-using PixelEngine.Extensions;
+using PixelEngine.Scripts.Extensions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

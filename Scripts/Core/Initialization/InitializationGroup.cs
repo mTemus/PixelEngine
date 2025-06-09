@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using AYellowpaper;
-using EditorAttributes;
 using UnityEngine;
 
 namespace PixelEngine.Core.Initialization
@@ -19,14 +16,15 @@ namespace PixelEngine.Core.Initialization
 
         public int Priority => m_priority;
 
-        public List<InitializableComponent> GetInitializables(bool reversed)
-        {
-            return reversed ? m_initializables : m_initializables.AsEnumerable().Reverse().ToList();
-        }
-
         public void AddInitializables(List<InitializableComponent> initializables)
         {
-            m_initializables.AddRange(initializables);
+            for (var i = 0; i < initializables.Count; i++)
+            {
+                if (m_initializables.Contains(initializables[i]))
+                    continue;
+                
+                m_initializables.Add(initializables[i]);
+            }
             
             SortByPriority();
         }
@@ -44,6 +42,8 @@ namespace PixelEngine.Core.Initialization
                 .Sort((x, y) => y.Priority.CompareTo(x.Priority));
         }
 
+        #region Editor
+
 #if UNITY_EDITOR
         public void RemoveNulls()
         {
@@ -51,7 +51,27 @@ namespace PixelEngine.Core.Initialization
                 if (m_initializables[i] == null)
                     m_initializables.RemoveAt(i);
         }
+
 #endif
         
+        #endregion
+
+        #region Initialization
+
+        public void EarlyInitialize() => m_initializables.ForEach(x => x.Component.EarlyInitialize());
+
+        public void InitializeAsNew() => m_initializables.ForEach(x => x.Component.InitializeAsNew());
+
+        public void InitializeAsLoaded() => m_initializables.ForEach(x => x.Component.InitializeAsLoaded());
+
+        public void LateInitialize() => m_initializables.ForEach(x => x.Component.LateInitialize());
+
+        public void Uninitialize()
+        {
+            for (var i = m_initializables.Count - 1; i >= 0; i--)
+                m_initializables[i].Component.Uninitialize();
+        }
+
+        #endregion
     }
 }

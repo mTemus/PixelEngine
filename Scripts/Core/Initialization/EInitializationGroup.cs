@@ -1,17 +1,14 @@
-﻿using System;
-
-namespace PixelEngine.Core.Initialization
+namespace PixelEngine.Scripts.Core.Initialization
 {
-    [Serializable]
-    public enum EInitializationGroup
-    {
-        Default = 0,
-        Core = 1,
-        Systems = 2,
-        UI = 3,
-        Player = 4,
-        Entities = 5,
-        AI = 6,
-        Environment = 7,
-    }
+	public enum EInitializationGroup
+	{
+		Default = 0,
+		System = 1,
+		Player = 2,
+		Environment = 3,
+		AI = 4,
+		GameLogic = 5,
+		UI = 6,
+		Objects = 7,
+	}
 }

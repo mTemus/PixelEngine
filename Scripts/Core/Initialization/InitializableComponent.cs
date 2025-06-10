@@ -2,7 +2,7 @@
 using PixelEngine.Core.Serialization.SerializeInterface;
 using UnityEngine;
 
-namespace PixelEngine.Scripts.Core.Initialization.Scene
+namespace PixelEngine.Core.Initialization
 {
     [Serializable]
     public class InitializableComponent

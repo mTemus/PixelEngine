@@ -1,4 +1,4 @@
-namespace PixelEngine.Scripts.Core.Initialization
+namespace PixelEngine.Core.Initialization
 {
     public interface IInitializable
     {

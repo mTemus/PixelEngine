@@ -1,16 +1,18 @@
 #if UNITY_EDITOR
+using UnityEditor;
 #endif
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using AYellowpaper.SerializedCollections;
 using EditorAttributes;
 using PixelEngine.Extensions;
-using UnityEditor;
+
 using UnityEngine;
 using Void = EditorAttributes.Void;
 
-namespace PixelEngine.Scripts.Core.Initialization.Scene
+namespace PixelEngine.Core.Initialization
 {
     public class SceneInitializationManager : MonoBehaviour
     {
@@ -37,7 +39,7 @@ namespace PixelEngine.Scripts.Core.Initialization.Scene
             foreach (var components in m_initializables.Values)
                 components.Clear();
             
-            gameObject.scene.TryGetComponents<EEInitializableSceneObject>(out var sceneInitializables, true);
+            gameObject.scene.TryGetComponents<InitializableObject>(out var sceneInitializables, true);
 
             foreach (var initializable in sceneInitializables)
                 AddSceneInitializables(initializable.Components, initializable.Group);
@@ -132,16 +134,11 @@ namespace PixelEngine.Scripts.Core.Initialization.Scene
 
         private void SetInitializationState(Action<List<IInitializable>> state)
         {
-            // var groupComponents = new List<InitializableComponent>();
-
             foreach (var initializableGroup in m_initializables)
-                state.Invoke(initializableGroup.Value.Select(comp => comp.Component).ToList());
-            
-            // for (var i = 0; i < m_initializationGroups.Length; i++)
-            // {
-            //     if (m_initializables.TryGetValue(m_initializationGroups[i].Group, out groupComponents))
-            //         state.Invoke(groupComponents.Select(comp => comp.Component).ToList());
-            // }
+                state.Invoke(initializableGroup.Value
+                    .Select(comp => comp.Component)
+                    .ToList()
+                );
         }
 
         private void SetInitializationStateReversed(Action<List<IInitializable>> state)
@@ -150,7 +147,10 @@ namespace PixelEngine.Scripts.Core.Initialization.Scene
 
             for (var i = keys.Count - 1; i >= 0; i--)
                 if (m_initializables.TryGetValue(keys[i], out var groupComponents))
-                    state.Invoke(groupComponents.Select(comp => comp.Component).ToList());
+                    state.Invoke(groupComponents
+                        .Select(comp => comp.Component)
+                        .ToList()
+                    );
         }
 
         private void EarlyInitialize(List<IInitializable> initializables)
@@ -209,19 +209,6 @@ namespace PixelEngine.Scripts.Core.Initialization.Scene
             
             collection[existingGroup].AddRange(components);
             collection[existingGroup] = collection[existingGroup].Distinct().OrderByDescending(comp => comp.Priority).ToList();
-            
-            
-            //
-            // if (existingGroup.Group == group)
-            // {
-            //     collection[group].AddRange(components);
-            //     collection[group] = collection[group].Distinct().OrderByDescending(comp => comp.Priority).ToList();
-            // }
-            // else
-            // {
-            //     collection.Add(group, new List<InitializableComponent>(components));
-            // }
-
             return true;
         }
 
@@ -237,10 +224,11 @@ namespace PixelEngine.Scripts.Core.Initialization.Scene
         [Serializable]
         public struct InitializationGroup
         {
-            [SerializeField] private EInitializationGroup m_group;
-
-            // [HelpBox("Higher number then higher priority of the group.", MessageMode.None)]
-            [SerializeField, Range(0, 100f)] private int m_priority;
+            [SerializeField]
+            private EInitializationGroup m_group;
+            
+            [SerializeField, Range(0, 100f)] 
+            private int m_priority;
 
             public InitializationGroup(EInitializationGroup group, int priority = 0)
             {

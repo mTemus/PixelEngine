@@ -2,14 +2,15 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace PixelEngine.Scripts.Core.Initialization.Scene
+namespace PixelEngine.Core.Initialization
 {
-    public abstract class EEInitializableObject : MonoBehaviour
+    public class InitializableObject : MonoBehaviour
     {
         [SerializeField]
         protected EInitializationGroup m_group;
 
-        [SerializeField] protected List<InitializableComponent> m_components;
+        [SerializeField] 
+        protected List<InitializableComponent> m_components;
 
         public EInitializationGroup Group => m_group;
         public List<InitializableComponent> Components => m_components;
@@ -28,12 +29,6 @@ namespace PixelEngine.Scripts.Core.Initialization.Scene
             for (var i = 0; i < childCount; i++)
                 if (TryGetChildInitializables(transform.GetChild(i), out var childInitializables))
                     initializables.AddRange(childInitializables);
-            
-            // for (var i = toAdd.Count - 1; i >= 0; --i)
-            // {
-            //     if (((MonoBehaviour)toAdd[i]).TryGetComponent<EEInitializableSceneObject>(out _))
-            //         toAdd.RemoveAt(i);
-            // }
 
             initializables = initializables.Distinct().ToList();
 
@@ -57,7 +52,7 @@ namespace PixelEngine.Scripts.Core.Initialization.Scene
             var childCount = child.childCount;
             initializables = new List<IInitializable>();
 
-            if (TryGetComponent<EEInitializableObject>(out _))
+            if (TryGetComponent<InitializableObject>(out _))
                 return false;
 
             for (var i = 0; i < childCount; i++)

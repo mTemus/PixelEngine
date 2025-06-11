@@ -1,4 +1,5 @@
 using Obvious.Soap;
+using PixelEngine.Core.SceneManagement.Loading;
 using UnityEngine;
 
 namespace PixelEngine.Core.SceneManagement.Events

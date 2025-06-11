@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Eflatun.SceneReference;
 using UnityEngine;
 
@@ -39,6 +40,6 @@ namespace PixelEngine.Core.SceneManagement.Loading
         public ScriptableEnumSceneGroupName GroupName => m_groupName;
         public List<SceneData> Scenes => m_scenes;
         
-        public string FindSceneNameByType(ESceneType sceneType) => m_scenes.Find(x => x.SceneType == sceneType).Name;
+        public string FindSceneNameByType(ESceneType sceneType) => m_scenes.FirstOrDefault(x => x.SceneType == sceneType)?.Name;
     }
 }

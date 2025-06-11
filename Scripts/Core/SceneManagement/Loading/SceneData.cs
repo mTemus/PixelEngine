@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Eflatun.SceneReference;
 using UnityEngine;
 
-namespace PixelEngine.Core.SceneManagement
+namespace PixelEngine.Core.SceneManagement.Loading
 {
     [Serializable]
     public class SceneData
@@ -31,12 +31,12 @@ namespace PixelEngine.Core.SceneManagement
     public class SceneGroup
     {
         [SerializeField] 
-        private ScriptableEnumSceneName m_groupName;
+        private ScriptableEnumSceneGroupName m_groupName;
         
         [SerializeField] 
         private List<SceneData> m_scenes;
         
-        public ScriptableEnumSceneName GroupName => m_groupName;
+        public ScriptableEnumSceneGroupName GroupName => m_groupName;
         public List<SceneData> Scenes => m_scenes;
         
         public string FindSceneNameByType(ESceneType sceneType) => m_scenes.Find(x => x.SceneType == sceneType).Name;

@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace PixelEngine.Core.SceneManagement
 {
-    [CreateAssetMenu(fileName ="x_ESceneName", menuName = "PixelEngine/Soap/ScriptableEnums/SceneName")]
-    public class ScriptableEnumSceneName : ScriptableEnumBase
+    [CreateAssetMenu(fileName ="x_ESceneGroupName", menuName = "PixelEngine/Soap/ScriptableEnums/Scene Group Name")]
+    public class ScriptableEnumSceneGroupName : ScriptableEnumBase
     {
         
     }

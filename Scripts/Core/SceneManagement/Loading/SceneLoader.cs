@@ -5,7 +5,7 @@ using PixelEngine.Utility.Math;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace PixelEngine.Core.SceneManagement
+namespace PixelEngine.Core.SceneManagement.Loading
 {
     //TODO: addressables
     //TODO: UniTask/R3

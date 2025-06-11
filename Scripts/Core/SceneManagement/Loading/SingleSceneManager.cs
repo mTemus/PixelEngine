@@ -5,7 +5,7 @@ using PixelEngine.Utility.Threading;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace PixelEngine.Core.SceneManagement
+namespace PixelEngine.Core.SceneManagement.Loading
 {
     public class SingleSceneManager
     {

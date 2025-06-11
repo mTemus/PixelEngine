@@ -130,6 +130,7 @@ namespace PixelEngine.Core.Initialization
         
         #endregion
 
+        //TODO: this is inefficient probably
         #region Initialization States
 
         private void SetInitializationState(Action<List<IInitializable>> state)
@@ -196,12 +197,8 @@ namespace PixelEngine.Core.Initialization
             
             TryAddInitializables(components, group, m_initializables);
         }
-
-        #endregion
-
-        #region Unitilty
-
-        private bool TryAddInitializables(List<InitializableComponent> components, EInitializationGroup group, Dictionary<InitializationGroup, List<InitializableComponent>> collection)
+        
+        private void TryAddInitializables(List<InitializableComponent> components, EInitializationGroup group, Dictionary<InitializationGroup, List<InitializableComponent>> collection)
         {
             CheckAndRemoveComponentDuplicate(components, collection, group);
 
@@ -209,7 +206,6 @@ namespace PixelEngine.Core.Initialization
             
             collection[existingGroup].AddRange(components);
             collection[existingGroup] = collection[existingGroup].Distinct().OrderByDescending(comp => comp.Priority).ToList();
-            return true;
         }
 
         private void CheckAndRemoveComponentDuplicate(List<InitializableComponent> components, Dictionary<InitializationGroup, List<InitializableComponent>> collection, EInitializationGroup excludeGroup)

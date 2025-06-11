@@ -106,5 +106,10 @@ namespace PixelEngine.Core.SceneManagement.Loading
             m_loadingCanvas.gameObject.SetActive(enable);
             m_loadingCamera.gameObject.SetActive(enable);
         }
+
+        public async Task LoadScene(ESceneType sceneType, bool reloadIfLoaded = false)
+        {
+            
+        }
     }
 }

@@ -57,7 +57,9 @@ namespace PixelEngine.Core.SceneManagement
         
         public async Task StopUsingScene(EGameMode gameMode)
         {
+            m_initialization.Uninitialize();
             
+            await Task.Yield();
         }
     }
 }

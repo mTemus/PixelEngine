@@ -86,7 +86,7 @@ namespace PixelEngine.Core.Initialization
         #endregion
 
         #region Initialization
-
+        
         public void StartInitialization()
         {
 #if UNITY_EDITOR

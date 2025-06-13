@@ -135,7 +135,7 @@ namespace PixelEngine.Core.Initialization
             var scene = SceneManager.GetActiveScene(); 
             
             if (scene.TryGetComponent<SceneController>(out var sceneController))
-                await sceneController.StopUsingScene(m_gameModeVariable.Value);
+                await sceneController.StartScene(m_gameModeVariable.Value);
             else
                 throw new Exception($"GlobalInitializer --- Scene {scene.name} is marked as initializable but doesn't have a scene controller!");
         }

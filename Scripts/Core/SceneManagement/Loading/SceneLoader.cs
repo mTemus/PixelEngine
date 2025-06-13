@@ -68,11 +68,11 @@ namespace PixelEngine.Core.SceneManagement.Loading
 
         }
         
-        private async void Start()
-        {
-            enabled = false;
-            await LoadSceneGroup(0);
-        }
+        // private async void Start()
+        // {
+        //     enabled = false;
+        //     await LoadSceneGroup(0);
+        // }
 
         private void Update()
         {

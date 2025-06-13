@@ -40,10 +40,9 @@ namespace PixelEngine.Core.GameManagement
 #else
             m_gameModeVariable.Value = EGameMode.MainMenu;            
 #endif
-            //TODO:
-            // Core initialization
+            var gameStartTask = m_coreSceneController.StartScene(EGameMode.NewGame);
 
-            await m_coreSceneController.StartScene(EGameMode.NewGame);
+            await gameStartTask;
 
             switch (m_gameModeVariable.Value)
             {

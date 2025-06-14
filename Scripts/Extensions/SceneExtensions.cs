@@ -7,6 +7,21 @@ namespace PixelEngine.Extensions
 {
     public static class SceneExtensions
     {
+        public static T GetComponentFromScene<T>(this Scene scene) where T : Component
+        {
+            var rootObjects = scene.GetRootGameObjects();
+
+            for (var i = 0; i < rootObjects.Length; i++)
+            {
+                var component = rootObjects[i].GetComponentInChildren<T>();
+
+                if (component != null)
+                    return component;
+            }
+
+            return null;
+        }
+        
         public static bool TryGetComponent<T>(this Scene scene, out T component) where T : Component
         {
             var rootObjects = scene.GetRootGameObjects();

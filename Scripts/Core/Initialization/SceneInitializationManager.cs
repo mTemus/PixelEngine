@@ -45,6 +45,8 @@ namespace PixelEngine.Core.Initialization
                 AddSceneInitializables(initializable.Components, initializable.Group);
             
             EditorUtility.SetDirty(this); // Mark the object as dirty so Unity serializes the change
+            
+            OrderGroupsAscending();
         }        
         
         [Button]
@@ -200,7 +202,8 @@ namespace PixelEngine.Core.Initialization
         
         private void TryAddInitializables(List<InitializableComponent> components, EInitializationGroup group, Dictionary<InitializationGroup, List<InitializableComponent>> collection)
         {
-            CheckAndRemoveComponentDuplicate(components, collection, group);
+            // This is obsolete because when gathering, it is empty
+            // CheckAndRemoveComponentDuplicate(components, collection, group);
 
             var existingGroup = collection.Keys.FirstOrDefault(g => g.Group == group);
             

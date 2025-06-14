@@ -1,21 +1,29 @@
-﻿using UnityEngine;
+﻿using EditorAttributes;
+using PixelEngine.Core.Initialization;
+using UnityEngine;
 using UnityUtils;
 
 namespace PixelEngine.Systems.ServiceLocator
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(ServiceLocator))]
-    public abstract class Bootstrapper : MonoBehaviour
+    public abstract class Bootstrapper : MonoBehaviour, IInitializable
     {
         private ServiceLocator m_container;
         
         protected internal ServiceLocator Container => m_container.OrNull() ?? (m_container = GetComponent<ServiceLocator>());
 
+        [SerializeField, ReadOnly]
         private bool m_hasBeenBootstrapped;
 
-        private void Awake()
+        public void EarlyInitialize()
         {
             BootstrapOnDemand();
+        }
+
+        public void Uninitialize()
+        {
+            // TODO: unboodstrap
         }
 
         public void BootstrapOnDemand()

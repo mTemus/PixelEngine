@@ -55,7 +55,10 @@ namespace PixelEngine.Systems.ServiceLocator
                 Debug.LogError("ServiceLocator --- This scene ServiceLocator is already registered!", this);
                 return;
             }
-            
+
+#if UNITY_EDITOR
+            Debug.Log($"ServiceLocator --- Added ServiceLocator for scene {scene.name} in {name}.");
+#endif
             m_sceneContainers[scene] = this;
         }
 

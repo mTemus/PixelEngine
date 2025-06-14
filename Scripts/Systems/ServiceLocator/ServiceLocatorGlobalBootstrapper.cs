@@ -2,7 +2,7 @@
 
 namespace PixelEngine.Systems.ServiceLocator
 {
-    [AddComponentMenu("PixelEngine/Systems/ServiceLocator/Global")]
+    [AddComponentMenu("PixelEngine/Systems/ServiceLocator/Global Service Initializer")]
     public class ServiceLocatorGlobalBootstrapper : Bootstrapper
     {
         [SerializeField] private bool m_dontDestroyOnLoad = true;

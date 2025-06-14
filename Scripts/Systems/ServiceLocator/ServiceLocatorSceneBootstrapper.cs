@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using PixelEngine.Core.Initialization;
+using UnityEngine;
 
 namespace PixelEngine.Systems.ServiceLocator
 {

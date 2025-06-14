@@ -56,7 +56,7 @@ namespace PixelEngine.Systems.ServiceLocator
 
         private ServiceManager TryAddService(Type type, object service)
         {
-            if (m_services.TryAdd(type, service))
+            if (!m_services.TryAdd(type, service))
                 Debug.LogError($"ServiceManager --- Service of type {type.FullName} is already registered!()");
             
             return this;

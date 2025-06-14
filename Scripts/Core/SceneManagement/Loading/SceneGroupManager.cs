@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PixelEngine.Extensions;
 using PixelEngine.Utility.Threading;
 using UnityEngine.SceneManagement;
+using UnityUtils;
 
 namespace PixelEngine.Core.SceneManagement.Loading
 {
@@ -58,6 +60,21 @@ namespace PixelEngine.Core.SceneManagement.Loading
             SceneManager.SetActiveScene(activeScene);
             
             OnSceneGroupLoaded.Invoke(m_activeSceneGroup);
+
+            var scenesToInitialize = m_activeSceneGroup.Scenes
+                .Where(s => s.IsInitializable)
+                .Select(s => s.Scene)
+                .Select(s => SceneManager.GetSceneByName(s.Name))
+                .Select(s => s.GetComponentFromScene<SceneController>())
+                .ToList();
+
+            if (scenesToInitialize.Count == 0)
+                return;
+
+            while (scenesToInitialize.Any(s => !s.SceneIsReady))
+            {
+                await Task.Delay(m_sceneMillisecondsDelay); 
+            }
             
             //TODO: while on active scene "scene manager" "IsReady" property, when the initialization/data load is done.
         }

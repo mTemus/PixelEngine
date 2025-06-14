@@ -4,6 +4,7 @@ using EditorAttributes;
 using PixelEngine.Core.Initialization;
 using PixelEngine.Core.SceneManagement;
 using PixelEngine.Core.SceneManagement.Loading;
+using PixelEngine.UI;
 using UnityEngine;
 
 namespace PixelEngine.Core.GameManagement
@@ -20,6 +21,9 @@ namespace PixelEngine.Core.GameManagement
         
         [SerializeField, Required]
         private SceneLoader m_sceneLoader;
+        
+        [SerializeField, Required]
+        private Blackscreen m_blackscreen;
         
         [Title("Variables", alignment: TextAnchor.UpperCenter, titleSize: 20, titleSpace: 8, drawLine: true)]
         [SerializeField, Required] 
@@ -53,7 +57,9 @@ namespace PixelEngine.Core.GameManagement
                     break;
                 
                 case EGameMode.MainMenu:
+                    m_blackscreen.Show(0f);
                     await m_sceneLoader.LoadScene(ESceneType.MainMenu);
+                    m_blackscreen.Hide(0.3f);
                     break;
                 
                 case EGameMode.NewGame:

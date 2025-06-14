@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using PixelEngine.Extensions;
 using PixelEngine.Utility.Threading;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -33,10 +34,20 @@ namespace PixelEngine.Core.SceneManagement.Loading
             var operation = SceneManager.LoadSceneAsync(sceneData.Scene.Path, LoadSceneMode.Additive);
             
             while (!operation.isDone)
-                await Task.Delay(100); 
+                await Task.Delay(m_sceneMillisecondsDelay); 
             
             m_activeScenes.Add(sceneData);
             OnSceneLoaded.Invoke(sceneData);
+
+            if (!sceneData.IsInitializable)
+                return;
+
+            var sceneController = SceneManager.GetSceneByName(sceneData.Scene.Name)
+                .GetComponentFromScene<SceneController>();
+
+            while (!sceneController.SceneIsReady)
+                await Task.Delay(m_sceneMillisecondsDelay); 
+            
         }
         
         public async void LoadScenes(List<SceneData> scenes)

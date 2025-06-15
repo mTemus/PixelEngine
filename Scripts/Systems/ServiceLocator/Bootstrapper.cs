@@ -23,7 +23,7 @@ namespace PixelEngine.Systems.ServiceLocator
 
         public void Uninitialize()
         {
-            // TODO: unboodstrap
+            Shutdown();
         }
 
         public void BootstrapOnDemand()
@@ -34,5 +34,6 @@ namespace PixelEngine.Systems.ServiceLocator
         }
 
         protected abstract void Bootstrap();
+        protected abstract void Shutdown();
     }
 }

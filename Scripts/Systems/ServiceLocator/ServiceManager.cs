@@ -72,22 +72,26 @@ namespace PixelEngine.Systems.ServiceLocator
         
         public ServiceManager Unregister<T>()  where T : class
         {
-            var serviecType = typeof(T);
-            
-            if (!m_services.ContainsKey(serviecType))
+            var serviceType = typeof(T);
+            return Unregister(serviceType);
+        }
+        
+        public ServiceManager Unregister(Type serviceType)
+        {
+            if (!m_services.ContainsKey(serviceType))
             {
-                Debug.LogError($"ServiceManager --- Service of type {serviecType.Name} is not registered!");
+                Debug.LogError($"ServiceManager --- Service of type {serviceType.Name} is not registered!");
                 return this;
             }
             
-            if (!TryRemoveService(serviecType))
+            if (!TryRemoveService(serviceType))
             {
-                Debug.LogError($"ServiceManager --- Service of type {serviecType.Name} could not be removed!");
+                Debug.LogError($"ServiceManager --- Service of type {serviceType.Name} could not be removed!");
                 return this;
             }
 
 #if UNITY_EDITOR
-            Debug.Log($"ServiceManager --- Service of type {serviecType.Name} removed!");
+            Debug.Log($"ServiceManager --- Service of type {serviceType.Name} removed!");
 #endif
             return this;
         }

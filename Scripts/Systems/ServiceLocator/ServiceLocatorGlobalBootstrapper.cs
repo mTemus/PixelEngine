@@ -5,11 +5,14 @@ namespace PixelEngine.Systems.ServiceLocator
     [AddComponentMenu("PixelEngine/Systems/ServiceLocator/Global Service Initializer")]
     public class ServiceLocatorGlobalBootstrapper : Bootstrapper
     {
-        [SerializeField] private bool m_dontDestroyOnLoad = true;
-        
         protected override void Bootstrap()
         {
-            Container.ConfigureAsGlobal(m_dontDestroyOnLoad);
+            Container.ConfigureAsGlobal();
+        }
+
+        protected override void Shutdown()
+        {
+            Container.OnShutdown();
         }
     }
 }

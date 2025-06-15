@@ -10,5 +10,10 @@ namespace PixelEngine.Systems.ServiceLocator
         {
             Container.ConfigureAsScene();
         }
+
+        protected override void Shutdown()
+        {
+            Container.OnShutdown();
+        }
     }
 }

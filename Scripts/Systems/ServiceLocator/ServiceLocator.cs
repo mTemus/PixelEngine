@@ -15,34 +15,22 @@ namespace PixelEngine.Systems.ServiceLocator
     //TODO: unregister
     public class ServiceLocator : MonoBehaviour
     {
-        private static ServiceLocator m_global;
+        private static ServiceLocator m_globalContainer;
         private static Dictionary<Scene, ServiceLocator> m_sceneContainers;
         private static List<GameObject> m_tmpSceneGameObjects;
         
-        readonly ServiceManager m_services = new ServiceManager();
+        private readonly ServiceManager m_services = new ServiceManager();
 
         const string k_globalServiceLocatorName = "ServiceLocator [Global]";
         const string k_sceneServiceLocatorName = "ServiceLocator [Scene]";
 
-        #region Bootstrapping
+        #region Configuration
 
-        protected internal void ConfigureAsGlobal(bool dontDestroyOnLoad)
+        protected internal void ConfigureAsGlobal()
         {
-            if (m_global == this)
-            {
-                Debug.LogWarning("ServiceLocator --- This global ServiceLocator is already registered!", this);
-            }
-            else if (m_global != null)
-            {
-                Debug.LogError("ServiceLocator --- Another ServiceLocator is already registered as global!", this);
-            }
-            else
-            {
-                m_global = this;
-                
-                if (dontDestroyOnLoad)
-                    DontDestroyOnLoad(gameObject);
-            }
+            if (m_globalContainer == this) Debug.LogWarning("ServiceLocator --- This global ServiceLocator is already registered!", this);
+            else if (m_globalContainer != null) Debug.LogError("ServiceLocator --- Another ServiceLocator is already registered as global!", this);
+            else m_globalContainer = this;
         }
         
         protected internal void ConfigureAsScene()
@@ -61,19 +49,16 @@ namespace PixelEngine.Systems.ServiceLocator
             m_sceneContainers[scene] = this;
         }
 
-        //TODO: this to uninitialization
-        private void OnDestroy()
+        protected internal void OnShutdown()
         {
-            if (m_global == this)
-                m_global = null;
-            else if (m_sceneContainers.ContainsValue(this))
-                m_sceneContainers.Remove(gameObject.scene);
+            if (m_globalContainer == this) m_globalContainer = null;
+            else if (m_sceneContainers.ContainsValue(this)) m_sceneContainers.Remove(gameObject.scene);
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics()
         {
-            m_global = null;
+            m_globalContainer = null;
             m_sceneContainers = new Dictionary<Scene, ServiceLocator>();
             m_tmpSceneGameObjects = new List<GameObject>();
         }
@@ -82,30 +67,21 @@ namespace PixelEngine.Systems.ServiceLocator
         
         #region Locators
 
-        public static ServiceLocator Global
+        public static ServiceLocator GlobalContainer
         {
             get
             {
-                if (m_global)
-                    return m_global;
-
-                if (FindFirstObjectByType<ServiceLocatorGlobalBootstrapper>() is { } found)
-                {
-                    found.BootstrapOnDemand();
-                    return m_global;
-                }
-
-
-                var container = new GameObject(k_globalServiceLocatorName, typeof(ServiceLocator));
-                container.AddComponent<ServiceLocatorGlobalBootstrapper>().BootstrapOnDemand();
-
-                return m_global;
+                if (m_globalContainer)
+                    return m_globalContainer;
+                
+                //TODO: this to lazy creation when runtime initializables will be added? Or also initialize in runtime
+                throw new InvalidOperationException("ServiceLocator --- There is no global ServiceLocator registered and initialized!");
             }
         }
 
         public static ServiceLocator ForEntity(MonoBehaviour mb)
         {
-            return mb.GetComponentInParent<ServiceLocator>().OrNull() ?? ForSceneOf(mb) ?? Global;
+            return mb.GetComponentInParent<ServiceLocator>().OrNull() ?? ForSceneOf(mb) ?? GlobalContainer;
         }
         
         public static ServiceLocator ForSceneOf(MonoBehaviour mb)
@@ -120,8 +96,7 @@ namespace PixelEngine.Systems.ServiceLocator
             m_tmpSceneGameObjects.Clear();
             scene.GetRootGameObjects(m_tmpSceneGameObjects);
 
-            foreach (var go in m_tmpSceneGameObjects.Where(go =>
-                         go.GetComponent<ServiceLocatorSceneBootstrapper>() != null))
+            foreach (var go in m_tmpSceneGameObjects.Where(go => go.GetComponent<ServiceLocatorSceneBootstrapper>() != null))
             {
                 if (!go.TryGetComponent(out ServiceLocatorSceneBootstrapper bootstrapper) || bootstrapper == null)
                     continue;
@@ -130,7 +105,7 @@ namespace PixelEngine.Systems.ServiceLocator
                 return bootstrapper.Container;
             }
 
-            return Global;
+            return GlobalContainer;
         }
 
         #endregion
@@ -156,6 +131,12 @@ namespace PixelEngine.Systems.ServiceLocator
         public ServiceLocator Unregister<T>() where T : class
         {
             m_services.Unregister<T>();
+            return this;
+        }
+        
+        public ServiceLocator Unregister(Type type) 
+        {
+            m_services.Unregister(type);
             return this;
         }
 
@@ -184,7 +165,7 @@ namespace PixelEngine.Systems.ServiceLocator
 
         private bool TryGetNextInHierarchy(out ServiceLocator container)
         {
-            if (this == m_global)
+            if (this == m_globalContainer)
             {
                 container = null;
                 return false;

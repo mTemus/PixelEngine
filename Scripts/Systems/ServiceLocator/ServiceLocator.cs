@@ -12,7 +12,6 @@ using UnityEditor;
 // https://www.youtube.com/watch?v=D4r5EyYQvwY
 namespace PixelEngine.Systems.ServiceLocator
 {
-    //TODO: initialization
     //TODO: unregister
     public class ServiceLocator : MonoBehaviour
     {
@@ -108,9 +107,7 @@ namespace PixelEngine.Systems.ServiceLocator
         {
             return mb.GetComponentInParent<ServiceLocator>().OrNull() ?? ForSceneOf(mb) ?? Global;
         }
-
         
-
         public static ServiceLocator ForSceneOf(MonoBehaviour mb)
         {
             var scene = mb.gameObject.scene;
@@ -154,6 +151,16 @@ namespace PixelEngine.Systems.ServiceLocator
 
         #endregion
 
+        #region Unregister
+        
+        public ServiceLocator Unregister<T>() where T : class
+        {
+            m_services.Unregister<T>();
+            return this;
+        }
+
+        #endregion
+        
         #region Get
 
         public ServiceLocator Get<T>(out T service) where T : class

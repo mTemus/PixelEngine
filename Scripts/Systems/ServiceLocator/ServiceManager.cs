@@ -59,7 +59,42 @@ namespace PixelEngine.Systems.ServiceLocator
             if (!m_services.TryAdd(type, service))
                 Debug.LogError($"ServiceManager --- Service of type {type.FullName} is already registered!()");
             
+            
+#if UNITY_EDITOR
+            Debug.Log($"ServiceManager --- Service of type {service.GetType().Name} added!");
+#endif
             return this;
+        }
+        
+        #endregion
+
+        #region Remove
+        
+        public ServiceManager Unregister<T>()  where T : class
+        {
+            var serviecType = typeof(T);
+            
+            if (!m_services.ContainsKey(serviecType))
+            {
+                Debug.LogError($"ServiceManager --- Service of type {serviecType.Name} is not registered!");
+                return this;
+            }
+            
+            if (!TryRemoveService(serviecType))
+            {
+                Debug.LogError($"ServiceManager --- Service of type {serviecType.Name} could not be removed!");
+                return this;
+            }
+
+#if UNITY_EDITOR
+            Debug.Log($"ServiceManager --- Service of type {serviecType.Name} removed!");
+#endif
+            return this;
+        }
+        
+        private bool TryRemoveService(Type type)
+        {
+            return m_services.Remove(type);
         }
 
         #endregion

@@ -91,19 +91,25 @@ namespace PixelEngine.Systems.ServiceLocator
             if (m_sceneContainers.TryGetValue(scene, out ServiceLocator container) && container != mb)
                 return container;
 
-            Debug.Log($"ServiceLocator --- Container for scene {scene.name} is not registered. Finding manually.");
+            // Debug.Log($"ServiceLocator --- Container for scene {scene.name} is not registered. Asking entity: {mb.name}/{mb.gameObject.scene.name}. Finding manually.");
 
-            m_tmpSceneGameObjects.Clear();
-            scene.GetRootGameObjects(m_tmpSceneGameObjects);
-
-            foreach (var go in m_tmpSceneGameObjects.Where(go => go.GetComponent<ServiceLocatorSceneBootstrapper>() != null))
-            {
-                if (!go.TryGetComponent(out ServiceLocatorSceneBootstrapper bootstrapper) || bootstrapper == null)
-                    continue;
-
-                bootstrapper.BootstrapOnDemand();
-                return bootstrapper.Container;
-            }
+#if UNITY_EDITOR
+            Debug.Log($"ServiceLocator --- Container for scene {scene.name} is not registered. Asking entity: {mb.name}/{mb.gameObject.scene.name}. Returning global.");
+#endif
+            
+            //TODO: sometimes when there is no service on scene, it should go do global, but normally its search for scene container in hierarchy, but it is not optimal
+            //TODO: to search on childreen also.
+            
+            // m_tmpSceneGameObjects.Clear();
+            // scene.GetRootGameObjects(m_tmpSceneGameObjects);
+            //
+            // foreach (var go in m_tmpSceneGameObjects.Where(go => go.GetComponentInChildren<ServiceLocatorSceneBootstrapper>() != null))
+            // {
+            //     if (!go.TryGetComponent(out ServiceLocatorSceneBootstrapper bootstrapper) || bootstrapper == null)
+            //         continue;
+            //     
+            //     return bootstrapper.Container;
+            // }
 
             return GlobalContainer;
         }

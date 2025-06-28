@@ -9,7 +9,7 @@ namespace PixelEngine.Core.Initialization
         [SerializeField]
         protected EInitializationGroup m_group;
 
-        [SerializeField] 
+        [SerializeField]
         protected List<InitializableComponent> m_components;
 
         public EInitializationGroup Group => m_group;

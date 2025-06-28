@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EditorAttributes;
+using CustomInspector;
 using PixelEngine.Core.GameManagement;
 using PixelEngine.Core.SceneManagement;
 using PixelEngine.Core.SceneManagement.Events;
@@ -15,21 +15,24 @@ namespace PixelEngine.Core.Initialization
 {
     public class GlobalInitializer : MonoBehaviour, IInitializable
     {
-        [Title("Variables", alignment: TextAnchor.UpperCenter, titleSize: 20, titleSpace: 8, drawLine: true)]
-        [SerializeField, Required] 
+        [Tab("Variables")]
+        [SerializeField] 
         private EGameModeVariable m_gameModeVariable;
         
-        [Title("Events", alignment: TextAnchor.UpperCenter, titleSize: 20, titleSpace: 8, drawLine: true)]
-        [SerializeField, Required]
+        [Tab("Events")]
+        [SerializeField]
         private ScriptableEventSceneGroup m_sceneGroupLoadedEvent;
         
-        [SerializeField, Required]
+        [Tab("Events")]
+        [SerializeField]
         private ScriptableEventSceneGroup m_sceneGroupPreUnloadedEvent;
 
-        [SerializeField, Required]
+        [Tab("Events")]
+        [SerializeField]
         private ScriptableEventSceneData m_sceneLoadedEvent;
         
-        [SerializeField, Required]
+        [Tab("Events")]
+        [SerializeField]
         private ScriptableEventSceneData m_scenePreUnloadedEvent;
 
         #region Initialization

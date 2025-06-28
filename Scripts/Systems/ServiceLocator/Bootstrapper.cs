@@ -1,4 +1,4 @@
-﻿using EditorAttributes;
+﻿using CustomInspector;
 using PixelEngine.Core.Initialization;
 using UnityEngine;
 using UnityUtils;

@@ -1,5 +1,6 @@
-﻿using System.Threading.Tasks;
-using EditorAttributes;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using CustomInspector;
 using PixelEngine.Core.SceneManagement.Events;
 using PixelEngine.Utility.Math;
 using UnityEngine;
@@ -15,34 +16,38 @@ namespace PixelEngine.Core.SceneManagement.Loading
     
     public class SceneLoader : MonoBehaviour
     {
-        [Title(title: "Settings", titleSize: 22, titleSpace: 14, alignment: TextAnchor.MiddleCenter, drawLine: true)]
-        
+        [Tab("Settings")]
         [SerializeField] 
         [Range(100, 5000)]
         private int m_sceneOperationMillisecondsDelay = 100;
         
-        [Title(title: "Events", titleSize: 22, titleSpace: 14, alignment: TextAnchor.MiddleCenter, drawLine: true)]
-        [SerializeField, Required(true)]
+        [Tab("Events")] 
+        [SerializeField]
         private ScriptableEventSceneData m_sceneLoadedEvent;
-        
-        [SerializeField, Required(true)]
+        [Tab("Events")] 
+        [SerializeField]
         private ScriptableEventSceneData m_sceneUnloadedEvent;
-        
-        [SerializeField, Required(true)]
+        [Tab("Events")] 
+        [SerializeField]
         private ScriptableEventSceneData m_scenePreUnloadedEvent;
-        
-        [SerializeField, Required(true)]
+        [Tab("Events")] 
+        [SerializeField]
         private ScriptableEventSceneGroup m_sceneGroupLoadedEvent;
-        
-        [SerializeField, Required(true)]
+        [Tab("Events")] 
+        [SerializeField]
         private ScriptableEventSceneGroup m_sceneGroupPreUnloadedEvent;
         
-        [Title(title: "Other", titleSize: 22, titleSpace: 14, alignment: TextAnchor.MiddleCenter, drawLine: true)]
+        [Tab("Other")]
         [SerializeField] private Image m_loadingBar;
+        [Tab("Other")]
         [SerializeField] private float m_fillSpeed = 0.5f;
+        [Tab("Other")]
         [SerializeField] private Canvas m_loadingCanvas;
+        [Tab("Other")]
         [SerializeField] private Camera m_loadingCamera;
-        [SerializeField] private SceneGroup[] m_sceneGroups;
+        [Tab("Other")]
+        [ListContainer]
+        [SerializeField] private List<SceneGroup> m_sceneGroups;
 
         private float m_targetProgress;
         private bool m_isLoading;

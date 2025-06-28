@@ -623,7 +623,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ac38d8067434b70be7cc441ec2e44bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_dontDestroyOnLoad: 0
+  m_hasBeenBootstrapped: 0
 --- !u!1 &551524558
 GameObject:
   m_ObjectHideFlags: 0
@@ -1032,15 +1032,7 @@ MonoBehaviour:
   m_fillSpeed: 0.5
   m_loadingCanvas: {fileID: 160992889}
   m_loadingCamera: {fileID: 131075299}
-  m_sceneGroups:
-  - m_groupName: {fileID: 0}
-    m_scenes:
-    - m_sceneType: 3
-      m_scene:
-        asset: {fileID: 102900000, guid: a959ac84da600654bb6ccc7c9be92b21, type: 3}
-        guid: a959ac84da600654bb6ccc7c9be92b21
-      m_isInitializable: 0
-      m_isSavable: 0
+  m_sceneGroups: []
 --- !u!4 &1127691173
 Transform:
   m_ObjectHideFlags: 0
@@ -1179,7 +1171,7 @@ MonoBehaviour:
   m_globalInitializer: {fileID: 1764736137}
   m_coreSceneController: {fileID: 973181474}
   m_sceneLoader: {fileID: 1127691172}
-  m_blackscreen: {fileID: 0}
+  m_blackscreen: {fileID: 1076915131}
   m_gameModeVariable: {fileID: 11400000, guid: a463e9d4fe0a92747b3cf40beeff51ad, type: 2}
   m_forceGameMode: 0
   m_gameMode: 0

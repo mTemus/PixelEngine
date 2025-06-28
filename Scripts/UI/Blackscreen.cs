@@ -1,4 +1,3 @@
-using EditorAttributes;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.Events;
@@ -8,7 +7,7 @@ namespace PixelEngine.UI
 {
     public class Blackscreen : MonoBehaviour
     {
-        [SerializeField, Required] 
+        [SerializeField] 
         private CanvasGroup m_canvasGroup;
 
         [SerializeField]

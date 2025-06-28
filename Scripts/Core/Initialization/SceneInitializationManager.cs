@@ -1,16 +1,16 @@
 #if UNITY_EDITOR
 using UnityEditor;
+using Void = PixelEngine.Editor.Inspector.Void;
 #endif
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using AYellowpaper.SerializedCollections;
-using EditorAttributes;
+using CustomInspector;
 using PixelEngine.Extensions;
 
 using UnityEngine;
-using Void = EditorAttributes.Void;
 
 namespace PixelEngine.Core.Initialization
 {
@@ -22,7 +22,20 @@ namespace PixelEngine.Core.Initialization
         #region Editor setup
         
 #if UNITY_EDITOR
-
+        
+        [HorizontalLine("DEV", 1f, FixedColor.IceWhite)]
+        [Button(nameof(GatherSceneInitializables))]
+        [SerializeField, HideField] private Void v_GatherSceneInitializables;
+        
+        [Button(nameof(OrderGroupsAscending))]
+        [SerializeField, HideField] private Void v_OrderGroupsAscending;
+        
+        [Button(nameof(CheckForNulls))]
+        [SerializeField, HideField] private Void v_CheckForNulls;
+        
+        [Button(nameof(PopulateKeys))]
+        [SerializeField, HideField] private Void v_PopulateKeys;
+        
         private void OnValidate()
         {
             PopulateKeys();
@@ -30,10 +43,6 @@ namespace PixelEngine.Core.Initialization
             CheckForNulls();
         }
         
-        [Title("Dev Buttons", titleSize: 22, titleSpace: 12, alignment: TextAnchor.MiddleCenter, drawLine: true, lineThickness: 2)]
-        [SerializeField] private Void m_buttonGroup;
-        
-        [Button]
         public void GatherSceneInitializables()
         {
             foreach (var components in m_initializables.Values)
@@ -49,13 +58,13 @@ namespace PixelEngine.Core.Initialization
             OrderGroupsAscending();
         }        
         
-        [Button]
+
         private void OrderGroupsAscending()
         {
             m_initializables = new SerializedDictionary<InitializationGroup, List<InitializableComponent>>(m_initializables.OrderByDescending(group => group.Key.Priority));
         }
         
-        [Button]
+
         private void CheckForNulls()
         {
             foreach (var initializable in m_initializables)
@@ -66,8 +75,7 @@ namespace PixelEngine.Core.Initialization
             }
         }
         
-        [Button]
-        private void PopulateKeys()
+        public void PopulateKeys()
         {
             var enumValues = Enum.GetValues(typeof(EInitializationGroup));
             

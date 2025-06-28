@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using EditorAttributes;
+using CustomInspector;
 using PixelEngine.Core.GameManagement;
 using PixelEngine.Core.Initialization;
 using UnityEngine;
@@ -9,8 +9,8 @@ namespace PixelEngine.Core.SceneManagement
 {
     public class SceneController : MonoBehaviour
     {
-        [Title("References", alignment: TextAnchor.UpperCenter, titleSize: 20, titleSpace: 8, drawLine: true)]
-        [SerializeField, Required]
+        [Tab("References")]
+        [SerializeField]
         private SceneInitializationManager m_initialization;
         
         private bool m_initializationDone;

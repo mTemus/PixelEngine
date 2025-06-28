@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using EditorAttributes;
+using CustomInspector;
 using PixelEngine.Core.Initialization;
 using PixelEngine.Core.SceneManagement;
 using PixelEngine.Core.SceneManagement.Loading;
@@ -12,28 +12,32 @@ namespace PixelEngine.Core.GameManagement
     //TODO: forcing load game with a game state name to fill
     public class GameManager : MonoBehaviour
     {
-        [Title("References", alignment: TextAnchor.UpperCenter, titleSize: 20, titleSpace: 8, drawLine: true)]
-        [SerializeField, Required]
+        [Tab("References")]
+        [SerializeField]
         private GlobalInitializer m_globalInitializer;
         
-        [SerializeField, Required]
+        [Tab("References")]
+        [SerializeField]
         private SceneController m_coreSceneController;
         
-        [SerializeField, Required]
+        [Tab("References")]
+        [SerializeField]
         private SceneLoader m_sceneLoader;
         
-        [SerializeField, Required]
+        [Tab("References")]
+        [SerializeField]
         private Blackscreen m_blackscreen;
         
-        [Title("Variables", alignment: TextAnchor.UpperCenter, titleSize: 20, titleSpace: 8, drawLine: true)]
-        [SerializeField, Required] 
+        [Tab("Variables")]
+        [SerializeField] 
         private EGameModeVariable m_gameModeVariable;
-
-        [Title("Editor Only", alignment: TextAnchor.UpperCenter, titleSize: 20, titleSpace: 8, drawLine: true)]
+        
+        [Tab("Editor Only")]
         [SerializeField]
         private bool m_forceGameMode;
         
-        [ShowField("m_forceGameMode")]
+        [Tab("Editor Only")]
+        [ShowIf("m_forceGameMode")]
         [SerializeField]
         private EGameMode m_gameMode;
         

@@ -23,7 +23,7 @@ namespace PixelEngine.Core.SceneManagement.Loading
             m_sceneMillisecondsDelay = sceneMillisecondsDelay;
         }
 
-        public async void LoadScene(SceneData sceneData)
+        public async Task LoadScene(SceneData sceneData)
         {
             if (m_activeScenes.Contains(sceneData))
             {
@@ -50,7 +50,7 @@ namespace PixelEngine.Core.SceneManagement.Loading
             
         }
         
-        public async void LoadScenes(List<SceneData> scenes)
+        public async Task LoadScenes(List<SceneData> scenes)
         {
             var scenesToLoad = scenes.Count;
             var operationGroup = new AsyncOperationGroup(scenesToLoad);
@@ -82,7 +82,7 @@ namespace PixelEngine.Core.SceneManagement.Loading
             }
         }
 
-        public async void UnloadScenes(List<SceneData> scenes)
+        public async Task UnloadScenes(List<SceneData> scenes)
         {
             var scenesToUnload = scenes.Count;
             var operationGroup = new AsyncOperationGroup(scenesToUnload);

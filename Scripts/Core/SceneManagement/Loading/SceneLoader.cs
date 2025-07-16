@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using CustomInspector;
 using PixelEngine.Core.SceneManagement.Events;
@@ -24,18 +25,29 @@ namespace PixelEngine.Core.SceneManagement.Loading
         [Tab("Events")] 
         [SerializeField]
         private ScriptableEventSceneData m_sceneLoadedEvent;
+        
         [Tab("Events")] 
         [SerializeField]
         private ScriptableEventSceneData m_sceneUnloadedEvent;
+        
         [Tab("Events")] 
         [SerializeField]
         private ScriptableEventSceneData m_scenePreUnloadedEvent;
+        
         [Tab("Events")] 
         [SerializeField]
         private ScriptableEventSceneGroup m_sceneGroupLoadedEvent;
+        
         [Tab("Events")] 
         [SerializeField]
         private ScriptableEventSceneGroup m_sceneGroupPreUnloadedEvent;
+        
+
+        [SerializeField] 
+        private List<SceneGroup> m_sceneGroups;
+        
+        [SerializeField] 
+        private List<SceneData> m_singleScenes;
         
         [Tab("Other")]
         [SerializeField] private Image m_loadingBar;
@@ -45,9 +57,7 @@ namespace PixelEngine.Core.SceneManagement.Loading
         [SerializeField] private Canvas m_loadingCanvas;
         [Tab("Other")]
         [SerializeField] private Camera m_loadingCamera;
-        [Tab("Other")]
-        [ListContainer]
-        [SerializeField] private List<SceneGroup> m_sceneGroups;
+        
 
         private float m_targetProgress;
         private bool m_isLoading;
@@ -72,12 +82,6 @@ namespace PixelEngine.Core.SceneManagement.Loading
 #endif
 
         }
-        
-        // private async void Start()
-        // {
-        //     enabled = false;
-        //     await LoadSceneGroup(0);
-        // }
 
         private void Update()
         {
@@ -114,7 +118,12 @@ namespace PixelEngine.Core.SceneManagement.Loading
 
         public async Task LoadScene(ESceneType sceneType, bool reloadIfLoaded = false)
         {
+            var sceneData = m_singleScenes.Find(x => x.SceneType == sceneType);
+
+            if (sceneData == null)
+                throw new Exception($"Can't load scene: {sceneType}, scene not found!");
             
+            await SingleScenesManager.LoadScene(sceneData);
         }
     }
 }

@@ -65,7 +65,7 @@ namespace PixelEngine.Core.Initialization
             {
                 var sceneData = scenes[i];
 
-                await InitializeScene(sceneData); 
+                await TryToInitializeScene(sceneData); 
 
                 if (sceneData.SceneType == ESceneType.Gameplay)
                     SceneManager.SetActiveScene(sceneData.Scene.LoadedScene);
@@ -74,7 +74,7 @@ namespace PixelEngine.Core.Initialization
 
         private async void OnSceneLoaded(SceneData sceneData)
         {
-            await InitializeScene(sceneData); 
+            await TryToInitializeScene(sceneData); 
         }
 
         #endregion
@@ -89,7 +89,7 @@ namespace PixelEngine.Core.Initialization
             {
                 var sceneData = scenes[i];
 
-                await InitializeScene(sceneData);
+                await TryToInitializeScene(sceneData);
             }
         }
 
@@ -100,7 +100,7 @@ namespace PixelEngine.Core.Initialization
 
         #endregion
 
-        private async Task InitializeScene(SceneData sceneData)
+        private async Task TryToInitializeScene(SceneData sceneData)
         {
             if (!sceneData.IsInitializable)
                 return;
@@ -140,7 +140,7 @@ namespace PixelEngine.Core.Initialization
             if (scene.TryGetComponent<SceneController>(out var sceneController))
                 await sceneController.StartScene(m_gameModeVariable.Value);
             else
-                throw new Exception($"GlobalInitializer --- Scene {scene.name} is marked as initializable but doesn't have a scene controller!");
+                throw new Exception($"GlobalInitializer --- Scene {scene.name} is an active scene but doesn't have a scene controller!");
         }
 #endif
     }

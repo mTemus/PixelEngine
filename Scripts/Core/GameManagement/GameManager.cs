@@ -41,6 +41,10 @@ namespace PixelEngine.Core.GameManagement
         [SerializeField]
         private EGameMode m_gameMode;
         
+        [Tab("Debug")]
+        [SerializeField]
+        private GameContext m_gameContext;
+        
         public async Task PrepareGame()
         {
 #if UNITY_EDITOR
@@ -48,9 +52,7 @@ namespace PixelEngine.Core.GameManagement
 #else
             m_gameModeVariable.Value = EGameMode.MainMenu;            
 #endif
-            var gameStartTask = m_coreSceneController.StartScene(EGameMode.NewGame);
-
-            await gameStartTask;
+            await m_coreSceneController.StartScene(EGameMode.NewGame);
 
             switch (m_gameModeVariable.Value)
             {
@@ -65,24 +67,20 @@ namespace PixelEngine.Core.GameManagement
                     await m_sceneLoader.LoadScene(ESceneType.MainMenu);
                     m_blackscreen.Hide(0.3f);
                     break;
-                
+
+                //TODO: 
                 case EGameMode.NewGame:
-                    break;
-                
                 case EGameMode.LoadGame:
-                    break;
-                
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
 
-
-            // if Editor
-            // 1. Some scene is loaded, so start initialization (as new) of the scene
+        public void StartGame(GameContext gameContext)
+        {
+            m_gameContext = gameContext;
+            m_gameModeVariable.Value = gameContext.GameMode;
             
-            // if Main Menu
-            // 1. Load Main Menu, initialize and let player decide if he wants a New Game or Load Game
-
             // if New Game
             // 1. Set GameModeVariable value to 'NewGame'
             // 2. Start new game cycle
@@ -94,7 +92,7 @@ namespace PixelEngine.Core.GameManagement
             // Start game (unlock movement, start ticking, etc.)
             // Done.
 
-            // if Load Game
+            // if Load Game / Continue
             // 1. Set GameModeVariable value to 'LoadGame'
             // 2. Start load game cycle
             // -> Black screen ON
@@ -104,9 +102,9 @@ namespace PixelEngine.Core.GameManagement
             // -> Black screen OFF
             // Start game (unlock movement, start ticking, etc.)
             // Done.
+            
+            
         }
-
-
 
 
 

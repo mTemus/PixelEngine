@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using CustomInspector;
 using PixelEngine.Core.GameManagement;
 using PixelEngine.Core.Initialization;
@@ -18,7 +17,7 @@ namespace PixelEngine.Core.SceneManagement
         
         public bool SceneIsReady => m_initializationDone && m_loadingDone;
         
-        public async Task StartScene(EGameMode gameMode)
+        public void StartScene(EGameMode gameMode)
         {
 #if UNITY_EDITOR
             Debug.Log($"Starting scene {gameObject.scene.name} in mode: {gameMode}.");
@@ -46,8 +45,6 @@ namespace PixelEngine.Core.SceneManagement
                 default:
                     throw new ArgumentOutOfRangeException(nameof(gameMode), gameMode, null);
             }
-            
-            await Task.Yield();
         }
 
         public void FocusOnScene()
@@ -55,11 +52,9 @@ namespace PixelEngine.Core.SceneManagement
             
         }
         
-        public async Task StopUsingScene(EGameMode gameMode)
+        public void StopUsingScene(EGameMode gameMode)
         {
             m_initialization.Uninitialize();
-            
-            await Task.Yield();
         }
     }
 }

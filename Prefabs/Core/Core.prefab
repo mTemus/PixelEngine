@@ -250,7 +250,7 @@ MonoBehaviour:
   m_gameModeVariable: {fileID: 11400000, guid: a463e9d4fe0a92747b3cf40beeff51ad, type: 2}
   m_mainMenuSceneCollectionName: {fileID: 11400000, guid: 8d546ae1064d52143b47220633c24b1f,
     type: 2}
-  m_forceGameMode: 1
+  m_forceGameMode: 0
   m_gameMode: 1
   m_sceneCollections:
   - ID: {fileID: 11400000, guid: 8d546ae1064d52143b47220633c24b1f, type: 2}

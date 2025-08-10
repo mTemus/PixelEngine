@@ -41,30 +41,26 @@ namespace PixelEngine.Core.Initialization
 
         public void EarlyInitialize()
         {
-            // m_sceneGroupLoadedEvent.OnRaised += OnSceneGroupLoaded;
-            // m_sceneGroupPreUnloadedEvent.OnRaised += OnSceneGroupPreUnloaded;
-            // m_sceneLoadedEvent.OnRaised += OnSceneLoaded;
-            // m_scenePreUnloadedEvent.OnRaised += OnScenePreUnloaded;
-            
             m_sceneCollectionLoadedEvent.OnRaised += OnSceneCollectionOpened;
+            m_sceneCollectionPreUnloadedEvent.OnRaised += OnSceneCollectionPreUnload;
             
+            m_sceneLoadedEvent.OnRaised += OnSceneLoaded;
+            m_scenePreUnloadedEvent.OnRaised += OnScenePreUnload;
         }
+
+        
 
         public void Uninitialize()
         {
-            // m_sceneGroupLoadedEvent.OnRaised -= OnSceneGroupLoaded;
-            // m_sceneGroupPreUnloadedEvent.OnRaised -= OnSceneGroupPreUnloaded;
-            // m_sceneLoadedEvent.OnRaised -= OnSceneLoaded;
-            // m_scenePreUnloadedEvent.OnRaised -= OnScenePreUnloaded;
-            
             m_sceneCollectionLoadedEvent.OnRaised -= OnSceneCollectionOpened;
+            m_sceneCollectionPreUnloadedEvent.OnRaised -= OnSceneCollectionPreUnload;
         }
 
         #endregion
 
         #region Scene Collection
 
-        private async void OnSceneCollectionOpened(SceneCollection sceneCollection)
+        private void OnSceneCollectionOpened(SceneCollection sceneCollection)
         {
             var collectionData = sceneCollection.UserData<SceneCollectionMetadata>();
 
@@ -80,57 +76,47 @@ namespace PixelEngine.Core.Initialization
                 return;
             
             for (var i = 0; i < initializableScenes.Count; i++)
-                await TryToInitializeScene(initializableScenes[i]);
+                TryToInitializeScene(initializableScenes[i]);
+        }
+
+        private  void OnSceneCollectionPreUnload(SceneCollection sceneCollection)
+        {
+            var collectionData = sceneCollection.UserData<SceneCollectionMetadata>();
+
+            if (collectionData == null)
+            {
+                Debug.LogError($"A collection without metadata was opened: {sceneCollection.name}!");
+                return;
+            }
+            
+            var initializableScenes = collectionData.InitializableScenes;
+
+            if (initializableScenes.Count == 0)
+                return;
+            
+            for (var i = 0; i < initializableScenes.Count; i++)
+                TryToUninitializeScene(initializableScenes[i]);
         }
 
         #endregion
 
-        #region Scene Loaded
+        #region Single Scene
 
-        // private async void OnSceneGroupLoaded(SceneGroup sceneGroup)
-        // {
-        //     // var scenes = new List<SceneData>(sceneGroup.Scenes);
-        //     //
-        //     // for (var i = 0; i < scenes.Count; i++)
-        //     // {
-        //     //     var sceneData = scenes[i];
-        //     //
-        //     //     await TryToInitializeScene(sceneData); 
-        //     //
-        //     //     if (sceneData.SceneType == ESceneType.Gameplay)
-        //     //         SceneManager.SetActiveScene(sceneData.Scene.LoadedScene);
-        //     // }
-        // }
-        //
-        // private async void OnSceneLoaded(SceneData sceneData)
-        // {
-        //     // await TryToInitializeScene(sceneData); 
-        // }
-        //
-        // #endregion
-        //
-        // #region Scene Unloaded
-        //
-        // private async void OnSceneGroupPreUnloaded(SceneGroup sceneGroup)
-        // {
-        //     // var scenes = new List<SceneData>(sceneGroup.Scenes);
-        //     //
-        //     // for (var i = 0; i < scenes.Count; i++)
-        //     // {
-        //     //     var sceneData = scenes[i];
-        //     //
-        //     //     await TryToInitializeScene(sceneData);
-        //     // }
-        // }
-        //
-        // private async void OnScenePreUnloaded(SceneData sceneData)
-        // {
-        //     await UninitializeScene(sceneData);
-        // }
+        private void OnSceneLoaded(Scene scene)
+        {
+            TryToInitializeScene(scene);
+        }
+
+        private void OnScenePreUnload(Scene scene)
+        {
+            TryToUninitializeScene(scene);
+        }
 
         #endregion
 
-        private async Task TryToInitializeScene(Scene asmScene)
+        #region Initialization Logic
+
+        private void TryToInitializeScene(Scene asmScene)
         {
             if (!asmScene.internalScene.HasValue)
             {
@@ -149,31 +135,45 @@ namespace PixelEngine.Core.Initialization
             }
 
             if (scene.TryGetComponent<SceneController>(out var sceneController))
-                await sceneController.StartScene(m_gameModeVariable.Value);
-            else
-                throw new Exception($"GlobalInitializer --- Scene {scene.name} is marked as initializable but doesn't have a scene controller!");
-        }
-        
-        private async Task UninitializeScene(Scene sceneData)
-        {
-            // if (!sceneData.IsInitializable)
-            //     return;
-            //
-            // if (sceneData.Scene.LoadedScene.TryGetComponent<SceneController>(out var sceneController))
-            //     await sceneController.StopUsingScene(m_gameModeVariable.Value);
-            // else
-            //     throw new Exception($"GlobalInitializer --- Scene {sceneData.Scene.Name} is marked as initializable but doesn't have a scene controller!");
+                sceneController.StartScene(m_gameModeVariable.Value);
         }
 
-#if UNITY_EDITOR
-        public async Task InitializeActiveScene()
+        private void TryToUninitializeScene(Scene asmScene)
         {
-            // var scene = SceneManager.GetActiveScene(); 
-            //
-            // if (scene.TryGetComponent<SceneController>(out var sceneController))
-            //     await sceneController.StartScene(m_gameModeVariable.Value);
-            // else
-            //     throw new Exception($"GlobalInitializer --- Scene {scene.name} is an active scene but doesn't have a scene controller!");
+            if (!asmScene.internalScene.HasValue)
+            {
+                Debug.LogError($"Trying to uninitialize scene without internal scene: {asmScene.name}!");
+                return;
+            }
+            
+            var scene = asmScene.internalScene.Value;
+
+            if (scene.isDirty || !scene.isLoaded)
+            {
+#if UNITY_EDITOR
+                Debug.LogError($"GlobalInitializer --- Trying to uninitialize dirty or not loaded scene: {scene.name}!");
+#endif
+                return;
+            }
+
+            if (scene.TryGetComponent<SceneController>(out var sceneController))
+                sceneController.StopUsingScene(m_gameModeVariable.Value);
+        }
+        
+        #endregion
+
+#if UNITY_EDITOR
+        public void InitializeActiveScene()
+        {
+            var scene = SceneManager.GetActiveScene();
+
+            if (scene.name.Contains("Fallback") || scene.name.Contains("Core"))
+                return;
+            
+            if (scene.TryGetComponent<SceneController>(out var sceneController))
+                sceneController.StartScene(m_gameModeVariable.Value);
+            else
+                throw new Exception($"GlobalInitializer --- Scene {scene.name} is an active scene but doesn't have a scene controller!");
         }
 #endif
     }

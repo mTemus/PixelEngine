@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using CustomInspector;
 using PixelEngine.Core.Initialization;
 using PixelEngine.Core.SceneManagement;
@@ -49,11 +48,11 @@ namespace PixelEngine.Core.GameManagement
         [SerializeField]
         private GameContext m_gameContext;
 
-        private async void Start()
+        private void Start()
         {
             try
             {
-                await PrepareGame();
+                PrepareGame();
             }
             catch (Exception e)
             {
@@ -61,20 +60,20 @@ namespace PixelEngine.Core.GameManagement
             }
         }
         
-        public async Task PrepareGame()
+        public void PrepareGame()
         {
 #if UNITY_EDITOR
             m_gameModeVariable.Value = m_forceGameMode ? m_gameMode : EGameMode.Editor;
 #else
             m_gameModeVariable.Value = EGameMode.MainMenu;            
 #endif
-            await m_coreSceneController.StartScene(EGameMode.NewGame);
+            m_coreSceneController.StartScene(EGameMode.NewGame);
 
             switch (m_gameModeVariable.Value)
             {
                 case EGameMode.Editor:
 #if UNITY_EDITOR
-                    await m_globalInitializer.InitializeActiveScene();
+                    m_globalInitializer.InitializeActiveScene();
 #endif
                     break;
                 

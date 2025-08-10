@@ -21,26 +21,26 @@ namespace PixelEngine.Core.SceneManagement.Loading
         [SerializeField] 
         [Range(100, 5000)]
         private int m_sceneOperationMillisecondsDelay = 100;
+
+        [Tab("Events")] 
+        [SerializeField]
+        private ScriptableEventScene m_sceneLoadedEvent;
+
+        [Tab("Events")] 
+        [SerializeField]
+        private ScriptableEventScene m_sceneUnloadedEvent;
         
         [Tab("Events")] 
         [SerializeField]
-        private ScriptableEventSceneData m_sceneLoadedEvent;
+        private ScriptableEventScene m_scenePreUnloadedEvent;
         
         [Tab("Events")] 
         [SerializeField]
-        private ScriptableEventSceneData m_sceneUnloadedEvent;
+        private ScriptableEventSceneCollection m_sceneCollectionLoadedEvent;
         
         [Tab("Events")] 
         [SerializeField]
-        private ScriptableEventSceneData m_scenePreUnloadedEvent;
-        
-        [Tab("Events")] 
-        [SerializeField]
-        private ScriptableEventSceneGroup m_sceneGroupLoadedEvent;
-        
-        [Tab("Events")] 
-        [SerializeField]
-        private ScriptableEventSceneGroup m_sceneGroupPreUnloadedEvent;
+        private ScriptableEventSceneCollection m_sceneCollectionPreUnloadedEvent;
         
 
         [SerializeField] 

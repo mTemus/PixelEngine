@@ -1,0 +1,13 @@
+using AdvancedSceneManager.Models;
+using UnityEngine;
+using Obvious.Soap;
+
+namespace PixelEngine.Core.SceneManagement.Events
+{
+    [CreateAssetMenu(fileName = "x_ScriptableEvent", menuName = "PixelEngine/ScriptableEvents/Core/SceneManagement/Scene")]
+
+    public class ScriptableEventScene : ScriptableEvent<Scene>
+    {
+        
+    }
+}

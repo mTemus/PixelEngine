@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AdvancedSceneManager.Models;
 using CustomInspector;
 using PixelEngine.Core.GameManagement;
 using PixelEngine.Core.SceneManagement;
@@ -9,6 +10,7 @@ using PixelEngine.Core.SceneManagement.Loading;
 using PixelEngine.Extensions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Scene = AdvancedSceneManager.Models.Scene;
 
 //TODO: unitask
 namespace PixelEngine.Core.Initialization
@@ -21,60 +23,89 @@ namespace PixelEngine.Core.Initialization
         
         [Tab("Events")]
         [SerializeField]
-        private ScriptableEventSceneGroup m_sceneGroupLoadedEvent;
+        private ScriptableEventSceneCollection m_sceneCollectionLoadedEvent;
         
         [Tab("Events")]
         [SerializeField]
-        private ScriptableEventSceneGroup m_sceneGroupPreUnloadedEvent;
+        private ScriptableEventSceneCollection m_sceneCollectionPreUnloadedEvent;
 
         [Tab("Events")]
         [SerializeField]
-        private ScriptableEventSceneData m_sceneLoadedEvent;
+        private ScriptableEventScene m_sceneLoadedEvent;
         
         [Tab("Events")]
         [SerializeField]
-        private ScriptableEventSceneData m_scenePreUnloadedEvent;
+        private ScriptableEventScene m_scenePreUnloadedEvent;
 
         #region Initialization
 
         public void EarlyInitialize()
         {
-            m_sceneGroupLoadedEvent.OnRaised += OnSceneGroupLoaded;
-            m_sceneGroupPreUnloadedEvent.OnRaised += OnSceneGroupPreUnloaded;
-            m_sceneLoadedEvent.OnRaised += OnSceneLoaded;
-            m_scenePreUnloadedEvent.OnRaised += OnScenePreUnloaded;
+            // m_sceneGroupLoadedEvent.OnRaised += OnSceneGroupLoaded;
+            // m_sceneGroupPreUnloadedEvent.OnRaised += OnSceneGroupPreUnloaded;
+            // m_sceneLoadedEvent.OnRaised += OnSceneLoaded;
+            // m_scenePreUnloadedEvent.OnRaised += OnScenePreUnloaded;
+            
+            m_sceneCollectionLoadedEvent.OnRaised += OnSceneCollectionOpened;
+            
         }
 
         public void Uninitialize()
         {
-            m_sceneGroupLoadedEvent.OnRaised -= OnSceneGroupLoaded;
-            m_sceneGroupPreUnloadedEvent.OnRaised -= OnSceneGroupPreUnloaded;
-            m_sceneLoadedEvent.OnRaised -= OnSceneLoaded;
-            m_scenePreUnloadedEvent.OnRaised -= OnScenePreUnloaded;
+            // m_sceneGroupLoadedEvent.OnRaised -= OnSceneGroupLoaded;
+            // m_sceneGroupPreUnloadedEvent.OnRaised -= OnSceneGroupPreUnloaded;
+            // m_sceneLoadedEvent.OnRaised -= OnSceneLoaded;
+            // m_scenePreUnloadedEvent.OnRaised -= OnScenePreUnloaded;
+            
+            m_sceneCollectionLoadedEvent.OnRaised -= OnSceneCollectionOpened;
         }
-        
+
+        #endregion
+
+        #region Scene Collection
+
+        private async void OnSceneCollectionOpened(SceneCollection sceneCollection)
+        {
+            var collectionData = sceneCollection.UserData<SceneCollectionMetadata>();
+
+            if (collectionData == null)
+            {
+                Debug.LogError($"A collection without metadata was opened: {sceneCollection.name}!");
+                return;
+            }
+            
+            var initializableScenes = collectionData.InitializableScenes;
+
+            if (initializableScenes.Count == 0)
+                return;
+            
+            for (var i = 0; i < initializableScenes.Count; i++)
+                await TryToInitializeScene(initializableScenes[i]);
+
+        }
+
         #endregion
 
         #region Scene Loaded
 
         private async void OnSceneGroupLoaded(SceneGroup sceneGroup)
         {
-            var scenes = new List<SceneData>(sceneGroup.Scenes);
-            
-            for (var i = 0; i < scenes.Count; i++)
-            {
-                var sceneData = scenes[i];
-
-                await TryToInitializeScene(sceneData); 
-
-                if (sceneData.SceneType == ESceneType.Gameplay)
-                    SceneManager.SetActiveScene(sceneData.Scene.LoadedScene);
-            }
+            // var scenes = new List<SceneData>(sceneGroup.Scenes);
+            //
+            // for (var i = 0; i < scenes.Count; i++)
+            // {
+            //     var sceneData = scenes[i];
+            //
+            //     await TryToInitializeScene(sceneData); 
+            //
+            //     if (sceneData.SceneType == ESceneType.Gameplay)
+            //         SceneManager.SetActiveScene(sceneData.Scene.LoadedScene);
+            // }
         }
 
         private async void OnSceneLoaded(SceneData sceneData)
         {
-            await TryToInitializeScene(sceneData); 
+            // await TryToInitializeScene(sceneData); 
         }
 
         #endregion
@@ -83,14 +114,14 @@ namespace PixelEngine.Core.Initialization
 
         private async void OnSceneGroupPreUnloaded(SceneGroup sceneGroup)
         {
-            var scenes = new List<SceneData>(sceneGroup.Scenes);
-
-            for (var i = 0; i < scenes.Count; i++)
-            {
-                var sceneData = scenes[i];
-
-                await TryToInitializeScene(sceneData);
-            }
+            // var scenes = new List<SceneData>(sceneGroup.Scenes);
+            //
+            // for (var i = 0; i < scenes.Count; i++)
+            // {
+            //     var sceneData = scenes[i];
+            //
+            //     await TryToInitializeScene(sceneData);
+            // }
         }
 
         private async void OnScenePreUnloaded(SceneData sceneData)
@@ -100,12 +131,15 @@ namespace PixelEngine.Core.Initialization
 
         #endregion
 
-        private async Task TryToInitializeScene(SceneData sceneData)
+        private async Task TryToInitializeScene(Scene asmScene)
         {
-            if (!sceneData.IsInitializable)
+            if (!asmScene.internalScene.HasValue)
+            {
+                Debug.LogError($"Trying to initialize scene without internal scene: {asmScene.name}!");
                 return;
-
-            var scene = sceneData.Scene.LoadedScene;
+            }
+            
+            var scene = asmScene.internalScene.Value;
 
             if (scene.isDirty || !scene.isLoaded)
             {

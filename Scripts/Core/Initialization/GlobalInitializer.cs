@@ -81,7 +81,6 @@ namespace PixelEngine.Core.Initialization
             
             for (var i = 0; i < initializableScenes.Count; i++)
                 await TryToInitializeScene(initializableScenes[i]);
-
         }
 
         #endregion
@@ -169,12 +168,12 @@ namespace PixelEngine.Core.Initialization
 #if UNITY_EDITOR
         public async Task InitializeActiveScene()
         {
-            var scene = SceneManager.GetActiveScene(); 
-            
-            if (scene.TryGetComponent<SceneController>(out var sceneController))
-                await sceneController.StartScene(m_gameModeVariable.Value);
-            else
-                throw new Exception($"GlobalInitializer --- Scene {scene.name} is an active scene but doesn't have a scene controller!");
+            // var scene = SceneManager.GetActiveScene(); 
+            //
+            // if (scene.TryGetComponent<SceneController>(out var sceneController))
+            //     await sceneController.StartScene(m_gameModeVariable.Value);
+            // else
+            //     throw new Exception($"GlobalInitializer --- Scene {scene.name} is an active scene but doesn't have a scene controller!");
         }
 #endif
     }

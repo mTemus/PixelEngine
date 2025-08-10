@@ -57,7 +57,7 @@ namespace PixelEngine.Core.GameManagement
             }
             catch (Exception e)
             {
-                throw new Exception($"Failed to start game. GameManager: {e.Message}|{e.Source}");
+                throw new Exception($"Failed to start game. GameManager: {e.Message} | {e.StackTrace}");
             }
         }
         

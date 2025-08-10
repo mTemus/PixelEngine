@@ -174,11 +174,17 @@ MonoBehaviour:
         m_priority: 100
       Value:
       - m_component:
-          m_underlyingValue: {fileID: 1764736137}
-        m_priority: 100
+          m_underlyingValue: {fileID: 1127691172}
+        m_priority: 95
       - m_component:
           m_underlyingValue: {fileID: 425777856}
         m_priority: 95
+      - m_component:
+          m_underlyingValue: {fileID: 1764736137}
+        m_priority: 90
+      - m_component:
+          m_underlyingValue: {fileID: 425777857}
+        m_priority: 10
     - Key:
         m_group: 5
         m_priority: 90
@@ -270,7 +276,7 @@ MonoBehaviour:
   m_components:
   - m_component:
       m_underlyingValue: {fileID: 425777856}
-    m_priority: 95
+    m_priority: 96
   - m_component:
       m_underlyingValue: {fileID: 425777857}
     m_priority: 10
@@ -392,6 +398,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1127691173}
   - component: {fileID: 1127691172}
+  - component: {fileID: 1127691174}
   m_Layer: 0
   m_Name: ScenesLoader
   m_TagString: Untagged
@@ -412,35 +419,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_sceneOperationMillisecondsDelay: 100
-  m_sceneLoadedEvent: {fileID: 11400000, guid: a297ebb8d2682d74ebc587fdda774622, type: 2}
-  m_sceneUnloadedEvent: {fileID: 11400000, guid: 5c725611f1e96bd4fb5c84a929f97efe,
+  m_scenePreloadedEvent: {fileID: 11400000, guid: a601fd86995c23249ac3677e9b23e123,
     type: 2}
-  m_scenePreUnloadedEvent: {fileID: 11400000, guid: 6bbd2b74d06337f4aa0d29105a5a4b41,
+  m_sceneLoadedEvent: {fileID: 11400000, guid: 7738183653945e94d8a99e085ad1886d, type: 2}
+  m_sceneUnloadedEvent: {fileID: 11400000, guid: 7d60829f2e5315445bcbe3e55f5a4959,
     type: 2}
-  m_sceneGroupLoadedEvent: {fileID: 11400000, guid: 524f98fa914b33842805ba26f9d16f10,
+  m_scenePreUnloadedEvent: {fileID: 11400000, guid: a601fd86995c23249ac3677e9b23e123,
     type: 2}
-  m_sceneGroupPreUnloadedEvent: {fileID: 11400000, guid: 7b37de9029bf42e4990c2e3770158918,
+  m_sceneCollectionLoadedEvent: {fileID: 11400000, guid: 3487cc60ae315414288f7cd219f5e883,
     type: 2}
-  m_sceneGroups:
-  - m_groupName: {fileID: 0}
-    m_scenes:
-    - m_sceneType: 3
-      m_scene:
-        asset: {fileID: 102900000, guid: a959ac84da600654bb6ccc7c9be92b21, type: 3}
-        guid: a959ac84da600654bb6ccc7c9be92b21
-      m_isInitializable: 1
-      m_isSavable: 0
-  m_singleScenes:
-  - m_sceneType: 2
-    m_scene:
-      asset: {fileID: 102900000, guid: 61ed40895a62efa4ba3ad3dbc2e51e8d, type: 3}
-      guid: 61ed40895a62efa4ba3ad3dbc2e51e8d
-    m_isInitializable: 1
-    m_isSavable: 0
-  m_loadingBar: {fileID: 0}
-  m_fillSpeed: 0.5
-  m_loadingCanvas: {fileID: 0}
-  m_loadingCamera: {fileID: 0}
+  m_sceneCollectionPreUnloadedEvent: {fileID: 11400000, guid: a3870e8575212884db2cbc14b92f9c4e,
+    type: 2}
 --- !u!4 &1127691173
 Transform:
   m_ObjectHideFlags: 0
@@ -456,6 +445,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 803966864}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1127691174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1127691171}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e800862a7a5e1c846aac7c3b0074a148, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_group: 1
+  m_components:
+  - m_component:
+      m_underlyingValue: {fileID: 1127691172}
+    m_priority: 95
 --- !u!1 &1228498161
 GameObject:
   m_ObjectHideFlags: 0
@@ -536,10 +542,18 @@ MonoBehaviour:
   m_globalInitializer: {fileID: 1764736137}
   m_coreSceneController: {fileID: 973181474}
   m_sceneLoader: {fileID: 1127691172}
-  m_blackscreen: {fileID: 0}
   m_gameModeVariable: {fileID: 11400000, guid: a463e9d4fe0a92747b3cf40beeff51ad, type: 2}
+  m_mainMenuSceneCollectionName: {fileID: 11400000, guid: 8d546ae1064d52143b47220633c24b1f,
+    type: 2}
   m_forceGameMode: 0
   m_gameMode: 0
+  m_sceneCollections:
+  - ID: {fileID: 11400000, guid: 8d546ae1064d52143b47220633c24b1f, type: 2}
+    SceneCollection: {fileID: 2120192282820123020, guid: ae9a8ce19c37d1240a16297ab1f4226e,
+      type: 2}
+  - ID: {fileID: 11400000, guid: feb1c9edbd26986438bc6e092b035968, type: 2}
+    SceneCollection: {fileID: -9106684785107472666, guid: ae9a8ce19c37d1240a16297ab1f4226e,
+      type: 2}
   m_gameContext:
     GameMode: 0
 --- !u!1 &1764736134
@@ -591,7 +605,7 @@ MonoBehaviour:
   m_components:
   - m_component:
       m_underlyingValue: {fileID: 1764736137}
-    m_priority: 100
+    m_priority: 90
 --- !u!114 &1764736137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -605,10 +619,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_gameModeVariable: {fileID: 11400000, guid: a463e9d4fe0a92747b3cf40beeff51ad, type: 2}
-  m_sceneGroupLoadedEvent: {fileID: 11400000, guid: 524f98fa914b33842805ba26f9d16f10,
-    type: 2}
-  m_sceneGroupPreUnloadedEvent: {fileID: 11400000, guid: 7b37de9029bf42e4990c2e3770158918,
-    type: 2}
+  m_sceneCollectionLoadedEvent: {fileID: 0}
+  m_sceneCollectionPreUnloadedEvent: {fileID: 0}
   m_sceneLoadedEvent: {fileID: 11400000, guid: a297ebb8d2682d74ebc587fdda774622, type: 2}
   m_scenePreUnloadedEvent: {fileID: 11400000, guid: 6bbd2b74d06337f4aa0d29105a5a4b41,
     type: 2}

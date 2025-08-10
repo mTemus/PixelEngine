@@ -88,46 +88,46 @@ namespace PixelEngine.Core.Initialization
 
         #region Scene Loaded
 
-        private async void OnSceneGroupLoaded(SceneGroup sceneGroup)
-        {
-            // var scenes = new List<SceneData>(sceneGroup.Scenes);
-            //
-            // for (var i = 0; i < scenes.Count; i++)
-            // {
-            //     var sceneData = scenes[i];
-            //
-            //     await TryToInitializeScene(sceneData); 
-            //
-            //     if (sceneData.SceneType == ESceneType.Gameplay)
-            //         SceneManager.SetActiveScene(sceneData.Scene.LoadedScene);
-            // }
-        }
-
-        private async void OnSceneLoaded(SceneData sceneData)
-        {
-            // await TryToInitializeScene(sceneData); 
-        }
-
-        #endregion
-
-        #region Scene Unloaded
-
-        private async void OnSceneGroupPreUnloaded(SceneGroup sceneGroup)
-        {
-            // var scenes = new List<SceneData>(sceneGroup.Scenes);
-            //
-            // for (var i = 0; i < scenes.Count; i++)
-            // {
-            //     var sceneData = scenes[i];
-            //
-            //     await TryToInitializeScene(sceneData);
-            // }
-        }
-
-        private async void OnScenePreUnloaded(SceneData sceneData)
-        {
-            await UninitializeScene(sceneData);
-        }
+        // private async void OnSceneGroupLoaded(SceneGroup sceneGroup)
+        // {
+        //     // var scenes = new List<SceneData>(sceneGroup.Scenes);
+        //     //
+        //     // for (var i = 0; i < scenes.Count; i++)
+        //     // {
+        //     //     var sceneData = scenes[i];
+        //     //
+        //     //     await TryToInitializeScene(sceneData); 
+        //     //
+        //     //     if (sceneData.SceneType == ESceneType.Gameplay)
+        //     //         SceneManager.SetActiveScene(sceneData.Scene.LoadedScene);
+        //     // }
+        // }
+        //
+        // private async void OnSceneLoaded(SceneData sceneData)
+        // {
+        //     // await TryToInitializeScene(sceneData); 
+        // }
+        //
+        // #endregion
+        //
+        // #region Scene Unloaded
+        //
+        // private async void OnSceneGroupPreUnloaded(SceneGroup sceneGroup)
+        // {
+        //     // var scenes = new List<SceneData>(sceneGroup.Scenes);
+        //     //
+        //     // for (var i = 0; i < scenes.Count; i++)
+        //     // {
+        //     //     var sceneData = scenes[i];
+        //     //
+        //     //     await TryToInitializeScene(sceneData);
+        //     // }
+        // }
+        //
+        // private async void OnScenePreUnloaded(SceneData sceneData)
+        // {
+        //     await UninitializeScene(sceneData);
+        // }
 
         #endregion
 
@@ -155,15 +155,15 @@ namespace PixelEngine.Core.Initialization
                 throw new Exception($"GlobalInitializer --- Scene {scene.name} is marked as initializable but doesn't have a scene controller!");
         }
         
-        private async Task UninitializeScene(SceneData sceneData)
+        private async Task UninitializeScene(Scene sceneData)
         {
-            if (!sceneData.IsInitializable)
-                return;
-
-            if (sceneData.Scene.LoadedScene.TryGetComponent<SceneController>(out var sceneController))
-                await sceneController.StopUsingScene(m_gameModeVariable.Value);
-            else
-                throw new Exception($"GlobalInitializer --- Scene {sceneData.Scene.Name} is marked as initializable but doesn't have a scene controller!");
+            // if (!sceneData.IsInitializable)
+            //     return;
+            //
+            // if (sceneData.Scene.LoadedScene.TryGetComponent<SceneController>(out var sceneController))
+            //     await sceneController.StopUsingScene(m_gameModeVariable.Value);
+            // else
+            //     throw new Exception($"GlobalInitializer --- Scene {sceneData.Scene.Name} is marked as initializable but doesn't have a scene controller!");
         }
 
 #if UNITY_EDITOR

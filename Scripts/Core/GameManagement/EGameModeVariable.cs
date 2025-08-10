@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PixelEngine.Core.GameManagement
 {
-    [CreateAssetMenu(fileName = "CurrentGameMode", menuName = "PixelEngine/Soap/ScriptableEnums/Game Mode")]
+    [CreateAssetMenu(fileName = "CurrentGameMode", menuName = "PixelEngine/SOAP/Variables/Game Mode")]
     public class EGameModeVariable : ScriptableVariable<EGameMode>
     {
         

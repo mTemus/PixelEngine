@@ -4,7 +4,7 @@ using Obvious.Soap;
 
 namespace PixelEngine.Core.SceneManagement.Events
 {
-    [CreateAssetMenu(fileName = "x_ScriptableEvent", menuName = "PixelEngine/ScriptableEvents/Core/SceneManagement/Scene Collection")]
+    [CreateAssetMenu(fileName = "x_ScriptableEvent", menuName = "PixelEngine/SOAP/ScriptableEvents/Core/SceneManagement/Scene Collection")]
 
     public class ScriptableEventSceneCollection : ScriptableEvent<SceneCollection>
     {

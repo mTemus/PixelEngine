@@ -1,10 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CustomInspector;
 using PixelEngine.Core.Initialization;
 using PixelEngine.Core.SceneManagement;
 using PixelEngine.Core.SceneManagement.Loading;
-using PixelEngine.UI;
 using UnityEngine;
 
 namespace PixelEngine.Core.GameManagement
@@ -22,15 +23,15 @@ namespace PixelEngine.Core.GameManagement
         
         [Tab("References")]
         [SerializeField]
-        private SceneLoader m_sceneLoader;
-        
-        [Tab("References")]
-        [SerializeField]
-        private Blackscreen m_blackscreen;
+        private SceneLoaderASMWrapper m_sceneLoader;
         
         [Tab("Variables")]
         [SerializeField] 
         private EGameModeVariable m_gameModeVariable;
+        
+        [Tab("Variables")]
+        [SerializeField, ForceFill, AssetsOnly]
+        private ScriptableEnumSceneCollectionName m_mainMenuSceneCollectionName;
         
         [Tab("Editor Only")]
         [SerializeField]
@@ -41,9 +42,24 @@ namespace PixelEngine.Core.GameManagement
         [SerializeField]
         private EGameMode m_gameMode;
         
+        [SerializeField]
+        private List<SceneCollectionWithId> m_sceneCollections = new List<SceneCollectionWithId>();
+        
         [Tab("Debug")]
         [SerializeField]
         private GameContext m_gameContext;
+
+        private async void Start()
+        {
+            try
+            {
+                await PrepareGame();
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Failed to start game. GameManager: {e.Message}|{e.Source}");
+            }
+        }
         
         public async Task PrepareGame()
         {
@@ -63,14 +79,20 @@ namespace PixelEngine.Core.GameManagement
                     break;
                 
                 case EGameMode.MainMenu:
-                    m_blackscreen.Show(0f);
-                    await m_sceneLoader.LoadScene(ESceneType.MainMenu);
-                    m_blackscreen.Hide(0.3f);
+                    var mainMenuScene = m_sceneCollections.First(sc => sc.ID == m_mainMenuSceneCollectionName);
+                    m_sceneLoader.LoadSceneCollection(mainMenuScene.SceneCollection);
+                    //TODO: wait for scene initialized?
+                    
                     break;
 
                 //TODO: 
                 case EGameMode.NewGame:
+                    break;
+                    
                 case EGameMode.LoadGame:
+                    //TODO: continue or game state
+                    break;
+                    
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -113,4 +135,6 @@ namespace PixelEngine.Core.GameManagement
 
 
     }
+
+    
 }

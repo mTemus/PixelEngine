@@ -167,7 +167,7 @@ namespace PixelEngine.Core.Initialization
         {
             var scene = SceneManager.GetActiveScene();
 
-            if (scene.name.Contains("Fallback") || scene.name.Contains("Core"))
+            if (scene.name.Contains("Fallback") || scene.name.Contains("Core") || scene.name.Contains("Splash"))
                 return;
             
             if (scene.TryGetComponent<SceneController>(out var sceneController))

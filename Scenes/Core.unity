@@ -317,7 +317,7 @@ PrefabInstance:
     - target: {fileID: 8146579672324408725, guid: 9dcb16e1faed759488ea22a329a9f3b9,
         type: 3}
       propertyPath: m_forceGameMode
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8146579672324408725, guid: 9dcb16e1faed759488ea22a329a9f3b9,
         type: 3}

@@ -129,6 +129,10 @@ namespace PixelEngine.Core.Initialization
         //Uninitializing should run backward to initializing!
         public void Uninitialize()
         {
+#if UNITY_EDITOR
+            Debug.Log($"Starting unitialization of scene {gameObject.scene.name}.");
+#endif
+            
             SetInitializationStateReversed(Uninitialize);
         }
 

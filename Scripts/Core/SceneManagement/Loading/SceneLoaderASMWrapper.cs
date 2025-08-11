@@ -43,8 +43,6 @@ namespace PixelEngine.Core.SceneManagement.Loading
         {
             SceneManager.runtime.collectionOpened += OnCollectionOpened;
             SceneManager.runtime.collectionClosed += OnCollectionClosed;
-            SceneManager.runtime.sceneOpened += OnSceneOpened;
-            SceneManager.runtime.sceneClosed += OnSceneClosed;
             SceneManager.runtime.scenePreloaded += OnScenePreloaded;
         }
 
@@ -52,8 +50,6 @@ namespace PixelEngine.Core.SceneManagement.Loading
         {
             SceneManager.runtime.collectionOpened -= OnCollectionOpened;
             SceneManager.runtime.collectionClosed -= OnCollectionClosed;
-            SceneManager.runtime.sceneOpened -= OnSceneOpened;
-            SceneManager.runtime.sceneClosed -= OnSceneClosed;
             SceneManager.runtime.scenePreloaded -= OnScenePreloaded;
         }
 
@@ -78,11 +74,13 @@ namespace PixelEngine.Core.SceneManagement.Loading
             m_scenePreloadedEvent.Raise(scene);
         }
 
+        //Called when opening a scene from a collection
         private void OnSceneOpened(Scene scene)
         {
             m_sceneLoadedEvent.Raise(scene);
         }
 
+        //Called when opening a scene from a collection
         private void OnSceneClosed(Scene scene)
         {
             m_sceneUnloadedEvent.Raise(scene);
@@ -92,7 +90,7 @@ namespace PixelEngine.Core.SceneManagement.Loading
 
         #region Public API
 
-        public void LoadSceneCollection(SceneCollection collection)
+        public void LoadSceneCollection(SceneCollection collection, bool additive = false)
         {
             var currentCollection = SceneManager.runtime.openCollection;
 

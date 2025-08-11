@@ -19,6 +19,12 @@ namespace PixelEngine.Core.SceneManagement
         
         public void StartScene(EGameMode gameMode)
         {
+            if (SceneIsReady)
+            {
+                Debug.LogError($"Trying to start scene that is already initialized: {gameObject.scene.name}!");
+                return;
+            }
+            
 #if UNITY_EDITOR
             Debug.Log($"Starting scene {gameObject.scene.name} in mode: {gameMode}.");
 #endif

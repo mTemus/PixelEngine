@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AdvancedSceneManager.Models;
 using CustomInspector;
 using PixelEngine.Core.Initialization;
 using PixelEngine.Core.SceneManagement;
@@ -28,10 +29,6 @@ namespace PixelEngine.Core.GameManagement
         [SerializeField] 
         private EGameModeVariable m_gameModeVariable;
         
-        [Tab("Variables")]
-        [SerializeField, ForceFill, AssetsOnly]
-        private ScriptableEnumSceneCollectionName m_mainMenuSceneCollectionName;
-        
         [Tab("Editor Only")]
         [SerializeField]
         private bool m_forceGameMode;
@@ -41,8 +38,17 @@ namespace PixelEngine.Core.GameManagement
         [SerializeField]
         private EGameMode m_gameMode;
         
+        [Tab("Scenes")]
+        [SerializeField, ForceFill, AssetsOnly]
+        private SceneCollection m_mainMenuSceneCollection;
+
+        [Tab("Scenes")] 
+        [SerializeField, ForceFill, AssetsOnly]
+        private ListContainer<SceneCollection> m_additiveGameplayScenes;
+        
+        [Tab("Scenes")]
         [SerializeField]
-        private List<SceneCollectionWithId> m_sceneCollections = new List<SceneCollectionWithId>();
+        private ListContainer<SceneCollectionWithId> m_gameplaySceneCollections = new List<SceneCollectionWithId>();
         
         [Tab("Debug")]
         [SerializeField]
@@ -78,14 +84,17 @@ namespace PixelEngine.Core.GameManagement
                     break;
                 
                 case EGameMode.MainMenu:
-                    var mainMenuScene = m_sceneCollections.First(sc => sc.ID == m_mainMenuSceneCollectionName);
-                    m_sceneLoader.LoadSceneCollection(mainMenuScene.SceneCollection);
+                    m_sceneLoader.LoadSceneCollection(m_mainMenuSceneCollection);
                     //TODO: wait for scene initialized?
                     
                     break;
 
                 //TODO: 
                 case EGameMode.NewGame:
+
+                    for (var i = 0; i < m_additiveGameplayScenes.Count; i++)
+                        m_sceneLoader.LoadSceneCollection(m_additiveGameplayScenes[i], true);
+                    
                     break;
                     
                 case EGameMode.LoadGame:

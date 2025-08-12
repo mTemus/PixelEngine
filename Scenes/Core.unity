@@ -1,5 +1,47 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7164554216649075887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bd3886436e609044aafef03c8894287, type: 3}
+  m_Name: PixelEngine - GlobalData
+  m_EditorClassIdentifier: 
+  m_id: jxpvj91a.166
+  m_scenes: []
+  m_description: 
+  m_isLocked: 0
+  m_lockMessage: 
+  m_userData: {fileID: 11400000, guid: 7a1c4bbe8ea045146a1d4ddbfe246afd, type: 2}
+  m_title: GlobalData
+  m_prefix: 'PixelEngine - '
+  m_inputBindings: []
+  m_ignoreInputBindingsForScenes: []
+  m_startupOption: 0
+  m_loadingScreenUsage: 0
+  m_loadingScreen: {fileID: 0}
+  m_activeScene: {fileID: 0}
+  m_setActiveSceneWhenOpenedAsAdditive: 0
+  m_unloadUnusedAssets: 0
+  m_openAsPersistent: 1
+  m_scenesThatShouldNotAutomaticallyOpen: []
+  m_loadPriority: -2
+  m_events:
+    OnOpen:
+      m_PersistentCalls:
+        m_Calls: []
+    OnClose:
+      m_PersistentCalls:
+        m_Calls: []
+    OnOpenChanged:
+      m_PersistentCalls:
+        m_Calls: []
+  m_isIncluded: 1
 --- !u!29 &1
 OcclusionCullingSettings:
   m_ObjectHideFlags: 0
@@ -321,9 +363,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8146579672324408725, guid: 9dcb16e1faed759488ea22a329a9f3b9,
         type: 3}
+      propertyPath: m_globalDataScene
+      value: 
+      objectReference: {fileID: 11400000, guid: 221679da0a06f0446a7f39122d454e7f,
+        type: 2}
+    - target: {fileID: 8146579672324408725, guid: 9dcb16e1faed759488ea22a329a9f3b9,
+        type: 3}
       propertyPath: m_coreSceneController
       value: 
       objectReference: {fileID: 187067150}
+    - target: {fileID: 8146579672324408725, guid: 9dcb16e1faed759488ea22a329a9f3b9,
+        type: 3}
+      propertyPath: m_mainMenuSceneCollection
+      value: 
+      objectReference: {fileID: 2120192282820123020, guid: ae9a8ce19c37d1240a16297ab1f4226e,
+        type: 2}
+    - target: {fileID: 8146579672324408725, guid: 9dcb16e1faed759488ea22a329a9f3b9,
+        type: 3}
+      propertyPath: m_globalDataSceneCollection
+      value: 
+      objectReference: {fileID: -7164554216649075887}
     - target: {fileID: 8146579672324408725, guid: 9dcb16e1faed759488ea22a329a9f3b9,
         type: 3}
       propertyPath: m_sceneCollections.Array.size
@@ -337,7 +396,29 @@ PrefabInstance:
         type: 2}
     - target: {fileID: 8146579672324408725, guid: 9dcb16e1faed759488ea22a329a9f3b9,
         type: 3}
+      propertyPath: m_gameplaySceneCollections.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8146579672324408725, guid: 9dcb16e1faed759488ea22a329a9f3b9,
+        type: 3}
+      propertyPath: m_gameplaySceneCollections.values.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8146579672324408725, guid: 9dcb16e1faed759488ea22a329a9f3b9,
+        type: 3}
       propertyPath: m_sceneCollections.Array.data[1].SceneCollection
+      value: 
+      objectReference: {fileID: -9106684785107472666, guid: ae9a8ce19c37d1240a16297ab1f4226e,
+        type: 2}
+    - target: {fileID: 8146579672324408725, guid: 9dcb16e1faed759488ea22a329a9f3b9,
+        type: 3}
+      propertyPath: m_gameplaySceneCollections.values.Array.data[0].ID
+      value: 
+      objectReference: {fileID: 11400000, guid: feb1c9edbd26986438bc6e092b035968,
+        type: 2}
+    - target: {fileID: 8146579672324408725, guid: 9dcb16e1faed759488ea22a329a9f3b9,
+        type: 3}
+      propertyPath: m_gameplaySceneCollections.values.Array.data[0].SceneCollection
       value: 
       objectReference: {fileID: -9106684785107472666, guid: ae9a8ce19c37d1240a16297ab1f4226e,
         type: 2}

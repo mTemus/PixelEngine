@@ -1,4 +1,6 @@
-﻿using AdvancedSceneManager;
+﻿using System.Linq;
+using AdvancedSceneManager;
+using AdvancedSceneManager.Callbacks.Events;
 using AdvancedSceneManager.Models;
 using CustomInspector;
 using PixelEngine.Core.Initialization;
@@ -41,23 +43,23 @@ namespace PixelEngine.Core.SceneManagement.Loading
 
         public void EarlyInitialize()
         {
-            SceneManager.runtime.collectionOpened += OnCollectionOpened;
+            SceneManager.runtime.RegisterCallback<CollectionOpenEvent>(OnCollectionOpened);
             SceneManager.runtime.collectionClosed += OnCollectionClosed;
             SceneManager.runtime.scenePreloaded += OnScenePreloaded;
         }
 
         public void Uninitialize()
         {
-            SceneManager.runtime.collectionOpened -= OnCollectionOpened;
+            SceneManager.runtime.UnregisterCallback<CollectionOpenEvent>(OnCollectionOpened);
             SceneManager.runtime.collectionClosed -= OnCollectionClosed;
             SceneManager.runtime.scenePreloaded -= OnScenePreloaded;
         }
 
         #region Collections
 
-        private void OnCollectionOpened(SceneCollection collection)
+        private void OnCollectionOpened(CollectionOpenEvent @event)
         {
-            m_sceneCollectionLoadedEvent.Raise(collection);
+            m_sceneCollectionLoadedEvent.Raise(@event.collection);
         }
 
         private void OnCollectionClosed(SceneCollection collection)
@@ -92,71 +94,45 @@ namespace PixelEngine.Core.SceneManagement.Loading
 
         public void LoadSceneCollection(SceneCollection collection, bool additive = false)
         {
-            var currentCollection = SceneManager.runtime.openCollection;
-
-            if (currentCollection != null)
+            if (additive)
             {
-                m_sceneCollectionPreUnloadedEvent.Raise(currentCollection);
-                SceneManager.runtime.Close(currentCollection);    
+                SceneManager.runtime.OpenAdditive(collection);
             }
-            
-            SceneManager.runtime.Open(collection);
-        }
+            else
+            {
+                var currentCollection = SceneManager.runtime.openCollection;
 
-        public void LoadScene(Scene scene)
-        {
-            SceneManager.runtime.Open(scene);
+                if (currentCollection != null)
+                {
+                    m_sceneCollectionPreUnloadedEvent.Raise(currentCollection);
+                    SceneManager.runtime.Close(currentCollection);    
+                }
+            
+                SceneManager.runtime.Open(collection);    
+            }
         }
         
-        public void UnloadScene(Scene scene)
+        public void UnloadAdditiveSceneCollection(SceneCollection collection)
         {
-            m_scenePreUnloadedEvent.Raise(scene);
-            SceneManager.runtime.Close(scene);
+            var additiveCollection = SceneManager.runtime.openAdditiveCollections.FirstOrDefault(openedCollection => openedCollection == collection);
+            
+            if (additiveCollection == null)
+            {
+                Debug.LogError($"Additive collection {collection.name} is not opened!");
+                return;
+            }
+            
+            SceneManager.runtime.Close(additiveCollection);
+        }
+        
+        public void UnloadAllAdditiveSceneCollections()
+        {
+            var additiveCollections = SceneManager.runtime.openAdditiveCollections.ToArray();
+            
+            foreach (var additiveCollection in additiveCollections)
+                SceneManager.runtime.Close(additiveCollection);
         }
 
         #endregion
-        
-        // private void Update()
-        // {
-        //     if (!m_isLoading)
-        //         return;
-        //     
-        //     var currentFillAmount = m_loadingBar.fillAmount;
-        //     var progressDifference = Mathf.Abs(currentFillAmount - m_targetProgress);
-        //     var dynamicFillSpeed = progressDifference * m_fillSpeed;
-        //     
-        //     m_loadingBar.fillAmount = Mathf.Lerp(currentFillAmount, m_targetProgress, Time.deltaTime * dynamicFillSpeed);
-        // }
-        //
-        // private async Task LoadSceneGroup(int index)
-        // {
-        //     m_loadingBar.fillAmount = 0f;
-        //     m_targetProgress = 1f;
-        //
-        //     var progress = new LoadingProgress();
-        //     progress.OnProgress += target => m_targetProgress = Mathf.Max(target, m_targetProgress);
-        //     
-        //     EnableLoadingCanvas();
-        //     await SceneGroupManager.LoadScenes(m_sceneGroups[index], progress);
-        //     EnableLoadingCanvas(false);
-        // }
-        //
-        // private void EnableLoadingCanvas(bool enable = true)
-        // {
-        //     enabled = enable;
-        //     m_isLoading = enable;
-        //     m_loadingCanvas.gameObject.SetActive(enable);
-        //     m_loadingCamera.gameObject.SetActive(enable);
-        // }
-        //
-        // public async Task LoadScene(ESceneType sceneType, bool reloadIfLoaded = false)
-        // {
-        //     var sceneData = m_singleScenes.Find(x => x.SceneType == sceneType);
-        //
-        //     if (sceneData == null)
-        //         throw new Exception($"Can't load scene: {sceneType}, scene not found!");
-        //     
-        //     await SingleScenesManager.LoadScene(sceneData);
-        // }
     }
 }

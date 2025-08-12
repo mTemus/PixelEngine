@@ -162,6 +162,14 @@ namespace PixelEngine.Core.Initialization
         
         #endregion
 
+        #region Public API
+
+        public void InitializeScene(Scene asmScene) => TryToInitializeScene(asmScene);
+        
+        public void UninitializeScene(Scene asmScene) => TryToUninitializeScene(asmScene);
+
+        #endregion
+        
 #if UNITY_EDITOR
         public void InitializeActiveScene()
         {

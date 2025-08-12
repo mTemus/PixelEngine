@@ -353,16 +353,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8146579672324408725, guid: 9dcb16e1faed759488ea22a329a9f3b9,
         type: 3}
-      propertyPath: m_gameMode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8146579672324408725, guid: 9dcb16e1faed759488ea22a329a9f3b9,
-        type: 3}
-      propertyPath: m_forceGameMode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8146579672324408725, guid: 9dcb16e1faed759488ea22a329a9f3b9,
-        type: 3}
       propertyPath: m_globalDataScene
       value: 
       objectReference: {fileID: 11400000, guid: 221679da0a06f0446a7f39122d454e7f,
@@ -372,12 +362,6 @@ PrefabInstance:
       propertyPath: m_coreSceneController
       value: 
       objectReference: {fileID: 187067150}
-    - target: {fileID: 8146579672324408725, guid: 9dcb16e1faed759488ea22a329a9f3b9,
-        type: 3}
-      propertyPath: m_mainMenuSceneCollection
-      value: 
-      objectReference: {fileID: 2120192282820123020, guid: ae9a8ce19c37d1240a16297ab1f4226e,
-        type: 2}
     - target: {fileID: 8146579672324408725, guid: 9dcb16e1faed759488ea22a329a9f3b9,
         type: 3}
       propertyPath: m_globalDataSceneCollection
@@ -401,24 +385,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8146579672324408725, guid: 9dcb16e1faed759488ea22a329a9f3b9,
         type: 3}
-      propertyPath: m_gameplaySceneCollections.values.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8146579672324408725, guid: 9dcb16e1faed759488ea22a329a9f3b9,
-        type: 3}
       propertyPath: m_sceneCollections.Array.data[1].SceneCollection
-      value: 
-      objectReference: {fileID: -9106684785107472666, guid: ae9a8ce19c37d1240a16297ab1f4226e,
-        type: 2}
-    - target: {fileID: 8146579672324408725, guid: 9dcb16e1faed759488ea22a329a9f3b9,
-        type: 3}
-      propertyPath: m_gameplaySceneCollections.values.Array.data[0].ID
-      value: 
-      objectReference: {fileID: 11400000, guid: feb1c9edbd26986438bc6e092b035968,
-        type: 2}
-    - target: {fileID: 8146579672324408725, guid: 9dcb16e1faed759488ea22a329a9f3b9,
-        type: 3}
-      propertyPath: m_gameplaySceneCollections.values.Array.data[0].SceneCollection
       value: 
       objectReference: {fileID: -9106684785107472666, guid: ae9a8ce19c37d1240a16297ab1f4226e,
         type: 2}

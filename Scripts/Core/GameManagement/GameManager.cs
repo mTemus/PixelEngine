@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using AdvancedSceneManager.Models;
 using CustomInspector;
 using PixelEngine.Core.Initialization;
@@ -13,6 +12,10 @@ namespace PixelEngine.Core.GameManagement
     //TODO: forcing load game with a game state name to fill
     public class GameManager : MonoBehaviour
     {
+        [Tab("Game")]
+        [SerializeField]
+        private GameContext m_gameContext;
+        
         [Tab("References")]
         [SerializeField]
         private GlobalInitializer m_globalInitializer;
@@ -27,7 +30,7 @@ namespace PixelEngine.Core.GameManagement
         
         [Tab("Variables")]
         [SerializeField] 
-        private EGameModeVariable m_gameModeVariable;
+        private GameContextVariable m_gameContextVariable;
         
         [Tab("Editor Only")]
         [SerializeField]
@@ -50,10 +53,6 @@ namespace PixelEngine.Core.GameManagement
         [SerializeField]
         private ListContainer<SceneCollectionWithId> m_gameplaySceneCollections = new List<SceneCollectionWithId>();
         
-        [Tab("Debug")]
-        [SerializeField]
-        private GameContext m_gameContext;
-
         private void Start()
         {
             try
@@ -68,14 +67,17 @@ namespace PixelEngine.Core.GameManagement
         
         public void PrepareGame()
         {
+            m_gameContextVariable.Value = m_gameContext;
+            
 #if UNITY_EDITOR
-            m_gameModeVariable.Value = m_forceGameMode ? m_gameMode : EGameMode.Editor;
+            if (!m_gameContext.ForceGameMode)
+                m_gameContext = new GameContext(EGameMode.Editor);
 #else
-            m_gameModeVariable.Value = EGameMode.MainMenu;            
+            m_gameContext = new GameContext(EGameMode.MainMenu);           
 #endif
             m_coreSceneController.StartScene(EGameMode.NewGame);
 
-            switch (m_gameModeVariable.Value)
+            switch (m_gameContext.GameMode)
             {
                 case EGameMode.Editor:
 #if UNITY_EDITOR
@@ -109,7 +111,6 @@ namespace PixelEngine.Core.GameManagement
         public void StartGame(GameContext gameContext)
         {
             m_gameContext = gameContext;
-            m_gameModeVariable.Value = gameContext.GameMode;
             
             // if New Game
             // 1. Set GameModeVariable value to 'NewGame'

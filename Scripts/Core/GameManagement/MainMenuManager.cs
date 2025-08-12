@@ -11,12 +11,12 @@ namespace PixelEngine.Core.GameManagement
         {
             ServiceLocator.GlobalContainer.Get(out GameManager gameManager);
             
-            var context = new GameContext
-            {
-                GameMode = EGameMode.NewGame
-            };
+            // var context = new GameContext
+            // {
+            //     GameMode = EGameMode.NewGame
+            // };
             
-            gameManager.StartGame(context);
+            // gameManager.StartGame(context);
         }
 
         public void LoadGame()

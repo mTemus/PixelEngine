@@ -19,7 +19,7 @@ namespace PixelEngine.Core.Initialization
     {
         [Tab("Variables")]
         [SerializeField] 
-        private EGameModeVariable m_gameModeVariable;
+        private GameContextVariable m_gameContextVariable;
         
         [Tab("Events")]
         [SerializeField]
@@ -135,7 +135,7 @@ namespace PixelEngine.Core.Initialization
             }
 
             if (scene.TryGetComponent<SceneController>(out var sceneController))
-                sceneController.StartScene(m_gameModeVariable.Value);
+                sceneController.StartScene(m_gameContextVariable.Value.GameMode);
         }
 
         private void TryToUninitializeScene(Scene asmScene)
@@ -157,7 +157,7 @@ namespace PixelEngine.Core.Initialization
             }
 
             if (scene.TryGetComponent<SceneController>(out var sceneController))
-                sceneController.StopUsingScene(m_gameModeVariable.Value);
+                sceneController.StopUsingScene(m_gameContextVariable.Value.GameMode);
         }
         
         #endregion
@@ -179,7 +179,7 @@ namespace PixelEngine.Core.Initialization
                 return;
             
             if (scene.TryGetComponent<SceneController>(out var sceneController))
-                sceneController.StartScene(m_gameModeVariable.Value);
+                sceneController.StartScene(m_gameContextVariable.Value.GameMode);
             else
                 throw new Exception($"GlobalInitializer --- Scene {scene.name} is an active scene but doesn't have a scene controller!");
         }

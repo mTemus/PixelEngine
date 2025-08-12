@@ -9,16 +9,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4314a8108a1f28b4da33f05f85788a4e, type: 3}
-  m_Name: CurrentGameMode
+  m_Script: {fileID: 11500000, guid: 6a570138661790c42a7780e58071d424, type: 3}
+  m_Name: CurrentGameContext
   m_EditorClassIdentifier: 
   TagIndex: 0
   Description: 
-  _guid: a463e9d4fe0a92747b3cf40beeff51ad
+  _guid: 
   _saveGuid: 0
-  _value: 0
-  _debugLogEnabled: 1
+  _value:
+    m_forceGameMode: 0
+    m_gameMode: 0
+  _debugLogEnabled: 0
   _saved: 0
-  _defaultValue: 0
-  _resetOn: 1
-  _runtimeValue: 0
+  _defaultValue:
+    m_forceGameMode: 0
+    m_gameMode: 0
+  _resetOn: 0
+  _runtimeValue:
+    m_forceGameMode: 0
+    m_gameMode: 0

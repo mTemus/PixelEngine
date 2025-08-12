@@ -19,7 +19,7 @@ namespace PixelEngine.Systems.ServiceLocator
         private static Dictionary<Scene, ServiceLocator> m_sceneContainers;
         private static List<GameObject> m_tmpSceneGameObjects;
         
-        private readonly ServiceManager m_services = new ServiceManager();
+        private readonly ServiceManager m_serviceManager = new ServiceManager();
 
         const string k_globalServiceLocatorName = "ServiceLocator [Global]";
         const string k_sceneServiceLocatorName = "ServiceLocator [Scene]";
@@ -120,13 +120,13 @@ namespace PixelEngine.Systems.ServiceLocator
 
         public ServiceLocator Register<T>(T service)
         {
-            m_services.Register<T>(service);
+            m_serviceManager.Register<T>(service);
             return this;
         }
 
         public ServiceLocator Register(Type type, object service)
         {
-            m_services.Register(type, service);
+            m_serviceManager.Register(type, service);
             return this;
         } 
 
@@ -136,13 +136,13 @@ namespace PixelEngine.Systems.ServiceLocator
         
         public ServiceLocator Unregister<T>() where T : class
         {
-            m_services.Unregister<T>();
+            m_serviceManager.Unregister<T>();
             return this;
         }
         
         public ServiceLocator Unregister(Type type) 
         {
-            m_services.Unregister(type);
+            m_serviceManager.Unregister(type);
             return this;
         }
 
@@ -166,7 +166,7 @@ namespace PixelEngine.Systems.ServiceLocator
 
         private bool TryGetService<T>(out T service) where T : class
         {
-            return m_services.TryGet(out service);
+            return m_serviceManager.TryGet(out service);
         }
 
         private bool TryGetNextInHierarchy(out ServiceLocator container)

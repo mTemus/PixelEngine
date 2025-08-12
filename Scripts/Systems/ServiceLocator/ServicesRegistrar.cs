@@ -16,6 +16,18 @@ namespace PixelEngine.Systems.ServiceLocator
         [SerializeField]
         private List<Object> m_services = new List<Object>();
 
+        private void OnValidate()
+        {
+            for (var i = m_services.Count - 1; i >= 0; i--)
+            {
+                if (m_services[i] is GameObject)
+                {
+                    Debug.LogError($"Trying to register GameObject as service: {m_services[i].name} in {name}!");
+                    m_services.RemoveAt(i);
+                }
+            }
+        }
+
         #region Initialization
 
         public void EarlyInitialize()
@@ -36,7 +48,7 @@ namespace PixelEngine.Systems.ServiceLocator
             
             foreach (var service in m_services)
             {
-                locator.Register(service);
+                locator.Register(service.GetType(), service);
 
 #if UNITY_EDITOR
                 Debug.Log($"Registered service: {service.name} in {locator.name}");

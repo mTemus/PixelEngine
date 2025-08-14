@@ -17,7 +17,7 @@ namespace PixelEngine.Core.SceneManagement
         
         public bool SceneIsReady => m_initializationDone && m_loadingDone;
         
-        public void StartScene(EGameMode gameMode)
+        public void StartScene(EGameMode gameMode, SceneOpenContext sceneOpenContext)
         {
             if (SceneIsReady)
             {

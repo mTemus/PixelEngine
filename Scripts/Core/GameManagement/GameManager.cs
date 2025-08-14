@@ -75,7 +75,7 @@ namespace PixelEngine.Core.GameManagement
 #else
             m_gameContext = new GameContext(EGameMode.MainMenu);           
 #endif
-            m_coreSceneController.StartScene(EGameMode.NewGame);
+            m_coreSceneController.StartScene(EGameMode.NewGame, new SceneOpenContext(m_coreSceneController.gameObject.scene.name, ESceneOpenMode.AsNew));
 
             switch (m_gameContext.GameMode)
             {

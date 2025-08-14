@@ -326,6 +326,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bd7da7aa7b4e14903323b48aeff636, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1534400200 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8146579672324408725, guid: 9dcb16e1faed759488ea22a329a9f3b9,
+    type: 3}
+  m_PrefabInstance: {fileID: 8866313536171937154}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbbca18d4ffe61c4d97c1edd51162f2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1764736137 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5132876343874784438, guid: 9dcb16e1faed759488ea22a329a9f3b9,
@@ -351,6 +363,11 @@ PrefabInstance:
       propertyPath: m_serviceManager.m_services._serializedList.Array.size
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4665732195155989587, guid: 9dcb16e1faed759488ea22a329a9f3b9,
+        type: 3}
+      propertyPath: m_services.Array.data[1]
+      value: 
+      objectReference: {fileID: 1534400200}
     - target: {fileID: 4735200407991467814, guid: 9dcb16e1faed759488ea22a329a9f3b9,
         type: 3}
       propertyPath: m_Name

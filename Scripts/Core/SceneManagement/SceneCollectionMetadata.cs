@@ -11,11 +11,15 @@ namespace PixelEngine.Core.SceneManagement
     {
         [SerializeField] 
         private List<ScenePriorityMetadata> m_initializableScenes;
-     
+
+        [SerializeField] 
+        private List<Scene> m_visitableScenes = new List<Scene>();
+        
         [SerializeField]
         private List<ScenePriorityMetadata> m_savableScenes;
 
         public List<Scene> InitializableScenes => GetScenesAscendingPriority(m_initializableScenes);
+        public List<Scene> VisitableScenes => m_visitableScenes;
         public List<Scene> SavableScenes => GetScenesAscendingPriority(m_savableScenes);
         
         private List<Scene> GetScenesAscendingPriority(List<ScenePriorityMetadata> scenes) => scenes

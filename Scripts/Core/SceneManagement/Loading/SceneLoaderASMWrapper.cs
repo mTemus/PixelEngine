@@ -32,6 +32,10 @@ namespace PixelEngine.Core.SceneManagement.Loading
         [Tab("Scene Events")] 
         [SerializeField]
         private ScriptableEventScene m_scenePreUnloadedEvent;
+
+        [Tab("Scene Collection Events")] 
+        [SerializeField]
+        private ScriptableEventSceneCollection m_sceneCollectionPreLoadEvent;
         
         [Tab("Scene Collection Events")] 
         [SerializeField]
@@ -96,6 +100,7 @@ namespace PixelEngine.Core.SceneManagement.Loading
         {
             if (additive)
             {
+                m_sceneCollectionPreLoadEvent.Raise(collection);
                 SceneManager.runtime.OpenAdditive(collection);
             }
             else
@@ -108,6 +113,7 @@ namespace PixelEngine.Core.SceneManagement.Loading
                     SceneManager.runtime.Close(currentCollection);    
                 }
             
+                m_sceneCollectionPreLoadEvent.Raise(collection);
                 SceneManager.runtime.Open(collection);    
             }
         }
@@ -122,6 +128,7 @@ namespace PixelEngine.Core.SceneManagement.Loading
                 return;
             }
             
+            m_sceneCollectionPreUnloadedEvent.Raise(additiveCollection);
             SceneManager.runtime.Close(additiveCollection);
         }
         
@@ -130,7 +137,10 @@ namespace PixelEngine.Core.SceneManagement.Loading
             var additiveCollections = SceneManager.runtime.openAdditiveCollections.ToArray();
             
             foreach (var additiveCollection in additiveCollections)
+            {
+                m_sceneCollectionPreUnloadedEvent.Raise(additiveCollection);
                 SceneManager.runtime.Close(additiveCollection);
+            }
         }
 
         #endregion

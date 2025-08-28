@@ -248,6 +248,7 @@ MonoBehaviour:
   m_gameContext:
     m_forceGameMode: 1
     m_gameMode: 1
+    m_sceneOpenContexts: []
   m_globalInitializer: {fileID: 5132876343874784438}
   m_coreSceneController: {fileID: 0}
   m_sceneLoader: {fileID: 8601872246697687446}
@@ -318,6 +319,8 @@ MonoBehaviour:
   m_sceneUnloadedEvent: {fileID: 11400000, guid: 7d60829f2e5315445bcbe3e55f5a4959,
     type: 2}
   m_scenePreUnloadedEvent: {fileID: 11400000, guid: a601fd86995c23249ac3677e9b23e123,
+    type: 2}
+  m_sceneCollectionPreLoadEvent: {fileID: 11400000, guid: 4a5563486b90f3b489eb5b9a32c4c88d,
     type: 2}
   m_sceneCollectionLoadedEvent: {fileID: 11400000, guid: 3487cc60ae315414288f7cd219f5e883,
     type: 2}
